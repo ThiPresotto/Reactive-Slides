@@ -1,0 +1,222 @@
+set SDL = require "SDL"
+set IMG = require "SDL.image"
+set TTF = require "SDL.ttf"
+set MIX = require "SDL.mixer"
+
+set sdl = require "atmos.env.sdl"
+
+;;;
+;; - usar math.floor
+;; - abstracoes: title, list, image...
+;; - list animada (up/dn)
+;; - image com posicao abstrata
+;;;
+
+val F = math.floor
+;;-->F
+
+
+
+
+SDL.init(SDL.flags.video) -->assert
+TTF.init() -->assert
+IMG.init() -->assert 
+MIX.init() -->assert
+
+MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
+
+defer{
+    SDL.quit()
+    TTF.quit()
+    IMG.quit()
+    MIX.quit()
+}
+
+
+val WIN = SDL.createWindow @{
+    title = "Apresentação",
+    height = 1000,
+    width = 1500,
+    flags = @{ SDL.flags.OpenGL
+    }
+} --> assert
+
+set REN = SDL.createRenderer(WIN, -1) --> assert
+set sdl.ren = REN
+
+func Title (str) {
+
+}
+
+func List (l, t) {
+    -- t = @{animated=true}
+
+}
+
+func SlideX () {
+    spawn Title("um titulo")
+    spawn List(@{
+        "Item 1", "Item 2", ...
+    })
+    spawn Image("SE", path)
+    await(false)
+}
+
+func Slide1(){
+    val FNT40 = TTF.open("DejaVuSans.ttf",40) --> assert
+    val FNT30 = TTF.open("DejaVuSans.ttf",30) --> assert
+
+    val quine_img = tex where {
+        sfc = IMG.load("quine.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val _,_,img_w,img_h = quine_img::query()
+    
+    val title = tex where {
+        sfc = FNT40::renderUtf8("Quine Program","blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val autor = tex where {
+        sfc = FNT30::renderUtf8("Thiago Presotto Moreira","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val uni = tex where {
+        sfc = FNT30::renderUtf8("Universidade do Estado do Rio de Janeiro","blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val date = tex where {
+        sfc = FNT30::renderUtf8("xx/xx/xxxx","blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    ;;set tw, th = FNT2::sizeText("Quine Program")
+
+    every :sdl.draw{
+        REN::setDrawColor(0xFFFFFF)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+        REN::copy(quine_img,nil,@{x=(1500/2)-(304/2-->math.floor),y=300,w=img_w*1.5,h=img_h*1.5})
+
+        set tw, th = FNT40::sizeText("Quine Program")
+        REN::copy(title,nil,@{x=(1500/2)-((tw+1)/2),y=200,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText("Thiago Presotto Moreira")
+        REN::copy(autor,nil,@{x=(1500/2)-((tw)/2),y=650,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText("Universidade do Estado do Rio de Janeiro")
+        REN::copy(uni,nil,@{x=(1500/2)-((tw)/2),y=695,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText("xx/xx/xxxx")
+        REN::copy(date,nil,@{x=(1500/2)-((tw)/2),y=740,w=tw,h=th})
+    }
+}
+
+func Slide2(){
+
+    val dot_img = tex where {
+        sfc = IMG.load("dot.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val c_img = tex where {
+        sfc = IMG.load("C_logo.png") -->assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+    
+    val FNT50 = TTF.open("DejaVuSans.ttf",50) --> assert
+
+    val FNT30 = TTF.open("DejaVuSans.ttf",30)--> assert
+
+    val title = tex where {
+        sfc = FNT50::renderUtf8("Caracteristicas Necessarias","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val info1 = tex where {
+        sfc = FNT30::renderUtf8("Deve funcionar sem input externo","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+    val info2 = tex where {
+        sfc = FNT30::renderUtf8("Sem programas vazios/sem byte","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+    val info3 = tex where {
+        sfc = FNT30::renderUtf8("Sem usar leitura de arquivos para ler a si mesmo","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+    val info4 = tex where {
+        sfc = FNT30::renderUtf8("A saída precisa ser idêntica ao código fonte.","blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    
+    every :sdl.draw{
+        REN::setDrawColor(0xFFFFFF)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+
+        REN::copy(c_img,nil,@{x=1000,y=(1000/2)-(504/2),w=430,h=504})
+        REN::copy(dot_img,nil,@{x=20,y=300,w=30,h=30})
+        REN::copy(dot_img,nil,@{x=20,y=400,w=30,h=30})
+        REN::copy(dot_img,nil,@{x=20,y=500,w=30,h=30})
+        REN::copy(dot_img,nil,@{x=20,y=600,w=30,h=30})
+        
+        set tw, th = FNT50::sizeText("Caracteristicas Necessarias")
+        REN::copy(title,nil,@{x=(1500/2)-((tw)/2),y=50,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText("Deve funcionar sem input externo")
+        REN::copy(info1,nil,@{x=80,y=300,w=tw,h=th})
+        set tw, th = FNT30::sizeText("Sem programas vazios/sem byte")
+        REN::copy(info2,nil,@{x=80,y=400,w=tw,h=th})
+        set tw, th = FNT30::sizeText("Sem usar leitura de arquivos para ler a si mesmo")
+        REN::copy(info3,nil,@{x=80,y=500,w=tw,h=th})
+        set tw, th = FNT30::sizeText("A saída precisa ser idêntica ao código fonte.")
+        REN::copy(info4,nil,@{x=80,y=600,w=tw,h=th})
+    }
+    
+
+}
+
+func Slide3(){
+
+    val codigo_img = tex where {
+        sfc = IMG.load("Code.png") -->assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val _,_,img_w,img_h = codigo_img::query()
+
+    every :sdl.draw{
+        REN::copy(codigo_img,nil,@{x=(1500/2)-(img_w/2),y=(1000/2)-((img_h)/2),w=img_w,h=img_h})
+    }
+}
+
+val slide_set = @{Slide1,Slide2,Slide3}
+
+;; func Show()
+var cur = 1
+loop {
+    spawn slide_set[cur]()
+    val _,key = await(SDL.event.KeyDown)
+    match key.name {
+        :Left => {
+            if cur > 1 {
+                set cur = cur - 1
+                ;;trans::playChannel(2,-1,1500)
+            }
+        }
+        :Right => {
+            if cur < 3 {
+                set cur = cur + 1
+                ;;trans::playChannel(2,-1,1500)
+            }
+        }
+        :Return =>{
+            break()
+        }
+    }
+}
+
+;;await spawn Show(slide_set))
