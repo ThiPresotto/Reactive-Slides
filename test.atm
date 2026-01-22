@@ -1,0 +1,72 @@
+;;;
+func ha (t){
+    print(t[1],t[2],t[3])
+}
+
+val tabi = @{"apple","banana","cherry"}
+set tabi[#tabi + 1] = "date"
+val l_size = #tabi
+print(l_size)
+print(table.concat(tabi,", "))
+print(tabi[1],tabi[4],tabi[0])
+
+ha(tabi)
+;;;
+
+val colorPalette = @{
+    black = 0x000000,
+    white = 0xFFFFFF,
+    red = 0xFF0000,
+    green = 0x00FF00,
+    blue = 0x0000FF,
+    yellow = 0xFFFF00,
+    cyan = 0x00FFFF,
+    magenta = 0xFF00FF
+}
+
+func background_color(text){
+    set color = colorPalette[text]
+    every :sdl.draw{
+        REN::setDrawColor(color)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+    }
+}
+
+set SDL = require "SDL"
+set IMG = require "SDL.image"
+set TTF = require "SDL.ttf"
+set MIX = require "SDL.mixer"
+
+set sdl = require "atmos.env.sdl"
+
+
+SDL.init(SDL.flags.video) -->assert
+TTF.init() -->assert
+IMG.init() -->assert 
+MIX.init() -->assert
+
+MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
+
+defer{
+    SDL.quit()
+    TTF.quit()
+    IMG.quit()
+    MIX.quit()
+}
+
+
+val WIN = SDL.createWindow @{
+    title = "Apresentação",
+    height = 1000,
+    width = 1500,
+    flags = @{ SDL.flags.OpenGL
+    }
+} --> assert
+
+set REN = SDL.createRenderer(WIN, -1) --> assert
+set sdl.ren = REN
+
+print("ola mundo{")
+spawn background_color("red")
+
+await @5
