@@ -1,0 +1,264 @@
+set SDL = require "SDL"
+set IMG = require "SDL.image"
+set TTF = require "SDL.ttf"
+set MIX = require "SDL.mixer"
+
+set sdl = require "atmos.env.sdl"
+
+val F = math.floor
+
+func open(win_name,win_height,win_width){
+    SDL.init(SDL.flags.video) -->assert
+    TTF.init() -->assert
+    IMG.init() -->assert 
+    MIX.init() -->assert
+
+    val WIN = SDL.createWindow @{
+        title = win_name,
+        height = win_height,
+        width = win_width,
+        flags = @{ SDL.flags.OpenGL
+        }
+    } --> assert
+
+    set REN = SDL.createRenderer(WIN, -1) --> assert
+    set sdl.ren = REN
+}
+
+;;MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
+
+func close(){
+    SDL.quit()
+    TTF.quit()
+    IMG.quit()
+    MIX.quit()
+}
+
+
+val colors = @{
+    black = 0x000000,
+    white = 0xFFFFFF,
+    red = 0xFF0000,
+    green = 0x00FF00,
+    blue = 0x0000FF,
+    yellow = 0xFFFF00,
+    cyan = 0x00FFFF,
+    magenta = 0xFF00FF
+}
+
+val fs = @{
+    C = \(w,h) {
+        @{
+            x=(1500/2)-(((w*1.5)/2)-->F),
+            y=(1000/2)-(((h*1.5)/2)-->F),
+            w=w*1.5,
+            h=h*1.5,
+        }
+    },
+    L = \(w,h) {
+        @{
+            x=((1500/2)+375)-(((w*0.5)/2)-->F),
+            y=(1000/2)-(((h*0.5)/2)-->F),
+            w=w*0.5,
+            h=h*0.5,
+        }
+    },
+}
+
+func background_color(clr_value){
+    set color = clr_value
+    every :sdl.draw{
+        REN::setDrawColor(color)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+    }
+}
+
+func slide_title(title,title_clr) {
+   
+    val FNT50 = TTF.open("DejaVuSans.ttf",50) --> assert
+
+    val title_texture = tex where {
+        sfc = FNT50::renderUtf8(title,"blended", title_clr, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    every :sdl.draw{
+        set tw, th = FNT50::sizeText(title)
+        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
+    }
+}
+
+func image(pos, path){
+    val slide_image = tex where { 
+        sfc = IMG.load(path) -->assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val _,_,img_w,img_h = slide_image::query()
+
+    every :sdl.draw{
+        REN::copy(slide_image,nil, pos(img_w,img_h))
+    }
+}
+
+func text(lines,font_size,f_color,b_color,x_start,y_start){
+    val FNT30 = TTF.open("DejaVuSans.ttf",font_size)--> assert
+
+    val skip = FNT30::lineSkip()
+
+    val tex = @{}
+
+    loop _,v in lines {
+        set tex[+] = texture where {
+            sfc = FNT30::renderUtf8(v,"shaded", f_color, b_color)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    every :sdl,draw {
+        REN::setDrawColor(0xFFFFFF)
+        REN::fillRect(@{x=80,y=300,w=1500,h=140}) ;;Decifrar tamanho de w
+        var height = y_start
+        loop i in #lines {
+            set tw, th = FNT30::sizeText(lines[i])
+            REN::copy(tex[i],nil,@{x=x_start,y=height,w=tw,h=th})
+            set height = height + skip
+        }
+    }
+}
+
+func frontCover (titlestr,autorstr,unistr,datestr) {
+    val FNT40 = TTF.open("DejaVuSans.ttf",40) --> assert
+    val FNT30 = TTF.open("DejaVuSans.ttf",30) --> assert
+    
+    val title = tex where {
+        sfc = FNT40::renderUtf8(titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val autor = tex where {
+        sfc = FNT30::renderUtf8(autorstr,"blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val uni = tex where {
+        sfc = FNT30::renderUtf8(unistr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val date = tex where {
+        sfc = FNT30::renderUtf8(datestr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+
+    every :sdl.draw{
+
+        set tw, th = FNT40::sizeText(titlestr)
+        REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText(autorstr)
+        REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText(unistr)
+        REN::copy(uni,nil,@{x=(1500/2)-((tw/2)-->F),y=695,w=tw,h=th})
+
+        set tw, th = FNT30::sizeText(datestr)
+        REN::copy(date,nil,@{x=(1500/2)-((tw/2)-->F),y=740,w=tw,h=th})
+    }
+}
+
+func bullet_list (l, t) {
+
+    val dot_img = tex where {
+        sfc = IMG.load("dot.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val FNT30 = TTF.open("DejaVuSans.ttf",30)--> assert
+
+    val tex = @{}
+
+    loop _,v in l {
+        set tex[+] = texture where {
+            sfc = FNT30::renderUtf8(v,"blended", 0x000000, 0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    var n = #l
+
+    par {
+        if (t == true){
+            set n = 0
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Up => {
+                        if n > 0 {
+                            set n = n - 1
+                        }
+                    }
+                    :Down => {
+                        if n < #l {
+                            set n = n + 1
+                        }
+
+                    }
+                }
+            }
+        }
+    } with {
+        every :sdl,draw {
+            var bullet_height = 300
+            loop i in n {
+                REN::copy(dot_img,nil,@{x=20,y=bullet_height,w=30,h=30})
+                set tw, th = FNT30::sizeText(l[i])
+                REN::copy(tex[i],nil,@{x=80,y=bullet_height,w=tw,h=th})
+                set bullet_height = bullet_height + 100
+            }
+        }
+    }
+
+
+    ;;-- t = @{animated=true}
+}
+
+func show(slide_set){
+    var cur = 1
+    val slide_number = #slide_set
+    
+    loop {
+        par_or{
+            spawn slide_set[cur]()
+            await(false)
+        }with{
+            do :Repetition{
+                loop{
+                    val _,key = await(SDL.event.KeyDown)
+                    match key.name {
+                        :Left => {
+                            if cur > 1 {
+                                set cur = cur - 1
+                                escape(:Repetition)
+                                ;;trans::playChannel(2,-1,1500)
+                            }
+                        }
+                        :Right => {
+                            if cur < slide_number {
+                                set cur = cur + 1
+                                escape(:Repetition)
+                                ;;trans::playChannel(2,-1,1500)
+                            }
+                        }
+                        :Return =>{
+                            break()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+sync

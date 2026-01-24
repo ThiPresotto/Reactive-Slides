@@ -69,4 +69,10 @@ set sdl.ren = REN
 print("ola mundo{")
 spawn background_color("red")
 
+val string = """Ola todo
+mundo"""
+;;isso é uma literal
+;;string de mais de uma linha";
+print(string)
+
 await @5
