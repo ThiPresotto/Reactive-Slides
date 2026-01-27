@@ -1,33 +1,36 @@
 val m = require "sync"
 
-m.open("Apresentação",1500,1000)
+val F = math.floor
+
+m.open("Apresentação",1000,1500)
 defer{
     m.close()
 }
 
 func Slide1(){
-    spawn background_color(m.colors.white)
-    spawn frontCover("Quine Program","Thiago Presotto Moreira","Universidade do Estado do Rio de Janeiro","20/10/1984","quine.png")
-    spawn Image(m.fs.C,"quine.png")
+    spawn m.background_color(m.colors.white)
+    spawn m.frontCover("Quine Program","Thiago Presotto Moreira","Universidade do Estado do Rio de Janeiro","20/10/1984","quine.png")
+    spawn m.image(m.fs.C,"quine.png")
     await(false)
 }
 
 func Slide2(){
-    spawn background_color(m.colors.white)
-    spawn slide_title("Caracteristicas Necessarias",colors.black)
-    spawn bullet_list(@{"Caracteristicas Necessarias","Sem programas vazios/sem byte","Sem usar leitura de arquivos para ler a si mesmo","A saída precisa ser idêntica ao código fonte."},true)
-    spawn Image(m.fs.L,"C_logo.png")
+    spawn m.background_color(m.colors.white)
+    spawn m.slide_title("Caracteristicas Necessarias",m.colors.black)
+    spawn m.bullet_list(@{"Caracteristicas Necessarias","Sem programas vazios/sem byte","Sem usar leitura de arquivos para ler a si mesmo","A saída precisa ser idêntica ao código fonte."},true)
+    spawn m.image(m.fs.L,"C_logo.png")
     await(false)
 
 }
 
 func Slide3(){
-    spawn background_color(m.colors.black)
-    spawn slide_title("Código em C",m.colors.white)
-    spawn text(@{"#include <studio.h>","int main(){","char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}","printf(s,10,34,s,34);return 0;}"},
+    spawn m.background_color(m.colors.black)
+    spawn m.slide_title("Código em C",m.colors.white)
+    spawn m.text(@{"#include <studio.h>","int main(){","char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}","printf(s,10,34,s,34);return 0;}"},
                 30, m.colors.white, m.colors.red, 80, 300)
     await(false)  
 }
 
 val slide_set = @{Slide1,Slide2,Slide3}
 await m.show (slide_set)
+

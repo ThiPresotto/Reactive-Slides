@@ -1,3 +1,5 @@
+val M = @{}
+
 set SDL = require "SDL"
 set IMG = require "SDL.image"
 set TTF = require "SDL.ttf"
@@ -7,13 +9,13 @@ set sdl = require "atmos.env.sdl"
 
 val F = math.floor
 
-func open(win_name,win_height,win_width){
+func M.open(win_name,win_height,win_width){
     SDL.init(SDL.flags.video) -->assert
     TTF.init() -->assert
     IMG.init() -->assert 
     MIX.init() -->assert
 
-    val WIN = SDL.createWindow @{
+    set WIN = SDL.createWindow @{
         title = win_name,
         height = win_height,
         width = win_width,
@@ -21,21 +23,23 @@ func open(win_name,win_height,win_width){
         }
     } --> assert
 
+
     set REN = SDL.createRenderer(WIN, -1) --> assert
     set sdl.ren = REN
 }
 
+
+
 ;;MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
 
-func close(){
+func M.close(){
     SDL.quit()
     TTF.quit()
     IMG.quit()
     MIX.quit()
 }
 
-
-val colors = @{
+set M.colors = @{
     black = 0x000000,
     white = 0xFFFFFF,
     red = 0xFF0000,
@@ -46,7 +50,8 @@ val colors = @{
     magenta = 0xFF00FF
 }
 
-val fs = @{
+
+set M.fs = @{
     C = \(w,h) {
         @{
             x=(1500/2)-(((w*1.5)/2)-->F),
@@ -63,22 +68,48 @@ val fs = @{
             h=h*0.5,
         }
     },
+    O = \(w,h) {
+        @{
+            x=((1500/2)-375)-(((w*0.5)/2)-->F),
+            y=(1000/2)-(((h*0.5)/2)-->F),
+            w=w*0.5,
+            h=h*0.5,
+        }
+    },
+    N = \(w,h) {
+        @{
+            x=(1500/2)-(((w*0.5)/2)-->F),
+            y=((1000/2)-250)-(((h*0.5)/2)-->F),
+            w=w*0.5,
+            h=h*0.5,
+        }
+    },
+    S = \(w,h) {
+        @{
+            x=(1500/2)-(((w*0.5)/2)-->F),
+            y=((1000/2)+250)-(((h*0.5)/2)-->F),
+            w=w*0.5,
+            h=h*0.5,
+        }
+    },
 }
 
-func background_color(clr_value){
-    set color = clr_value
+
+func M.background_color(clr_value){
+    val color = clr_value || 0xFFFFFF
     every :sdl.draw{
         REN::setDrawColor(color)
         REN::fillRect(@{x=0,y=0,w=1500,h=1000})
     }
 }
 
-func slide_title(title,title_clr) {
+func M.slide_title(title,title_clr) {
    
+    val color = title_clr || 0x000000
     val FNT50 = TTF.open("DejaVuSans.ttf",50) --> assert
 
     val title_texture = tex where {
-        sfc = FNT50::renderUtf8(title,"blended", title_clr, 0x000000)-->assert
+        sfc = FNT50::renderUtf8(title,"blended", color, 0x000000)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
@@ -88,7 +119,7 @@ func slide_title(title,title_clr) {
     }
 }
 
-func image(pos, path){
+func M.image(pos, path){
     val slide_image = tex where { 
         sfc = IMG.load(path) -->assert
         tex = REN::createTextureFromSurface(sfc) --> assert
@@ -101,8 +132,12 @@ func image(pos, path){
     }
 }
 
-func text(lines,font_size,f_color,b_color,x_start,y_start){
+func M.text(lines,font_size,f_color,b_color,x_start,y_start){
+    val color_1 = f_color || 0x000000
+    val color_2 = b_color || 0xFFFFFF
     val FNT30 = TTF.open("DejaVuSans.ttf",font_size)--> assert
+
+    print(FNT30::sizeText("char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}"))
 
     val skip = FNT30::lineSkip()
 
@@ -117,7 +152,7 @@ func text(lines,font_size,f_color,b_color,x_start,y_start){
 
     every :sdl,draw {
         REN::setDrawColor(0xFFFFFF)
-        REN::fillRect(@{x=80,y=300,w=1500,h=140}) ;;Decifrar tamanho de w
+        REN::fillRect(@{x=80,y=300,w=1365,h=140}) ;;Decifrar tamanho de w
         var height = y_start
         loop i in #lines {
             set tw, th = FNT30::sizeText(lines[i])
@@ -127,7 +162,7 @@ func text(lines,font_size,f_color,b_color,x_start,y_start){
     }
 }
 
-func frontCover (titlestr,autorstr,unistr,datestr) {
+func M.frontCover (titlestr,autorstr,unistr,datestr) {
     val FNT40 = TTF.open("DejaVuSans.ttf",40) --> assert
     val FNT30 = TTF.open("DejaVuSans.ttf",30) --> assert
     
@@ -168,7 +203,7 @@ func frontCover (titlestr,autorstr,unistr,datestr) {
     }
 }
 
-func bullet_list (l, t) {
+func M.bullet_list (l, t) {
 
     val dot_img = tex where {
         sfc = IMG.load("dot.png") --> assert
@@ -224,7 +259,7 @@ func bullet_list (l, t) {
     ;;-- t = @{animated=true}
 }
 
-func show(slide_set){
+func M.show(slide_set){
     var cur = 1
     val slide_number = #slide_set
     
@@ -261,4 +296,4 @@ func show(slide_set){
     }
 }
 
-sync
+M

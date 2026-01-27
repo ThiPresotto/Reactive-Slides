@@ -54,7 +54,6 @@ defer{
     MIX.quit()
 }
 
-
 val WIN = SDL.createWindow @{
     title = "Apresentação",
     height = 1000,
@@ -66,13 +65,12 @@ val WIN = SDL.createWindow @{
 set REN = SDL.createRenderer(WIN, -1) --> assert
 set sdl.ren = REN
 
-print("ola mundo{")
-spawn background_color("red")
+val string = """Issio e uma string
+                multilinha"""
 
-val string = """Ola todo
-mundo"""
-;;isso é uma literal
-;;string de mais de uma linha";
+;;spawn background_color("red")
+
+
 print(string)
 
 await @5
