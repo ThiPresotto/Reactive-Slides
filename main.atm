@@ -1,0 +1,40 @@
+val S = require "slides"
+
+S.open("Apresentação",1500,1000)
+defer{
+    S.close()
+}
+
+func Slide1(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.FrontCover @{titlestr = "Quine Program", autorstr = "Thiago Presotto Moreira",unistr = "Universidade do Estado do Rio de Janeiro", datestr = "20/10/1984","quine.png"}
+    spawn S.Image @{pos = S.fs.C,path = "quine.png",scale = 1.5}
+    await(false)
+}
+
+func Slide2(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Caracteristicas Necessarias",title_clr = S.colors.black}
+    spawn S.BulletList @{ string = ```[[Caracteristicas Necessarias
+    Sem programas vazios/sem byte
+    Sem usar leitura de arquivos para ler a si mesmo
+    A saída precisa ser idêntica ao código fonte.]]```, anim = true}
+    spawn S.Image @{pos = S.fs.L, path= "C_logo.png",scale = 0.5}
+    await(false)
+
+}
+
+func Slide3(){
+    spawn S.BackgroundColor(S.colors.black)
+    spawn S.Title @{title = "Código em C", title_clr = S.colors.white}
+    spawn S.Text @{string = ```[[#include <studio.h>
+int main(){
+char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}
+printf(s,10,34,s,34);return 0;}]]```,
+                font_size = 30, str_clr = S.colors.white,x_start = 80, y_start = 300}
+    await(false)  
+}
+
+val slide_set = @{Slide1,Slide2,Slide3}
+await S.Show (slide_set)
+

@@ -1,0 +1,340 @@
+;;Refletir sobre argumentos em Image. Pos pode ser
+;;uma tabela {x,y} ou um valor chave "L" ao mesmo tempo
+
+val M = @{}
+
+set SDL = require "SDL"
+set IMG = require "SDL.image"
+set TTF = require "SDL.ttf"
+set MIX = require "SDL.mixer"
+
+set sdl = require "atmos.env.sdl"
+
+val F = math.floor
+
+func M.open(win_name,win_width,win_height){
+    SDL.init(SDL.flags.video) -->assert
+    TTF.init() -->assert
+    IMG.init() -->assert 
+    MIX.init() -->assert
+
+    set WIN = SDL.createWindow @{
+        title = win_name,
+        height = win_height,
+        width = win_width,
+        flags = @{ SDL.flags.OpenGL
+        }
+    } --> assert
+
+
+    set REN = SDL.createRenderer(WIN, -1) --> assert
+    set sdl.ren = REN
+}
+
+
+
+;;MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
+
+func M.close(){
+    SDL.quit()
+    TTF.quit()
+    IMG.quit()
+    MIX.quit()
+}
+
+set M.colors = @{
+    black = 0x000000,
+    white = 0xFFFFFF,
+    red = 0xFF0000,
+    green = 0x00FF00,
+    blue = 0x0000FF,
+    yellow = 0xFFFF00,
+    cyan = 0x00FFFF,
+    magenta = 0xFF00FF
+}
+
+;;TODO ordered and unordered list 
+set M.lt = @{
+    OL = 1,
+    UL = 2,
+}
+
+
+set M.fs = @{
+    C = \(w,h,scale) {
+        @{
+            x=(1500/2)-(((w*scale)/2)-->F),
+            y=(1000/2)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    L = \(w,h,scale) {
+        @{
+            x=((1500/2)+375)-(((w*scale)/2)-->F),
+            y=(1000/2)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    O = \(w,h,scale) {
+        @{
+            x=((1500/2)-375)-(((w*scale)/2)-->F),
+            y=(1000/2)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    N = \(w,h,scale) {
+        @{
+            x=(1500/2)-(((w*scale)/2)-->F),
+            y=((1000/2)-250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    S = \(w,h,scale) {
+        @{
+            x=(1500/2)-(((w*scale)/2)-->F),
+            y=((1000/2)+250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    SL = \(w,h,scale) {
+        @{
+            x=((1500/2)+375)-(((w*scale)/2)-->F),
+            y=((1000/2)+250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    SO = \(w,h,scale) {
+        @{
+            x=((1500/2)-375)-(((w*scale)/2)-->F),
+            y=((1000/2)+250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+    NO = \(w,h,scale) {
+        @{
+            x=((1500/2)-375)-(((w*scale)/2)-->F),
+            y=((1000/2)-250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
+}
+
+
+func M.BackgroundColor(clr_value){
+    val color = clr_value || 0xFFFFFF
+    every :sdl.draw{
+        REN::setDrawColor(color)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+    }
+}
+
+;;Adicionar diferentes tamanhos de título (atual = 50)
+func M.Title(t) {
+   
+    val color = t.title_clr || 0x000000
+    val FNT = TTF.open("DejaVuSans.ttf",50) --> assert
+
+    val title_texture = tex where {
+        sfc = FNT::renderUtf8(t.title,"blended", color, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    every :sdl.draw{
+        set tw, th = FNT::sizeText(t.title)
+        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
+    }
+}
+
+;;Adicionar parametro de escala. Corrigir tabela fs
+func M.Image(t){
+    val scale = t.scale || 1
+    val slide_image = tex where { 
+        sfc = IMG.load(t.path) -->assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val _,_,img_w,img_h = slide_image::query()
+
+    every :sdl.draw{
+        REN::copy(slide_image,nil, t.pos(img_w,img_h,scale))
+    }
+}
+
+;;opção de centralizar o texto.
+func M.Text(t){
+    
+    val color = t.str_clr
+    val FNT = TTF.open("DejaVuSans.ttf",t.font_size)--> assert
+
+    val skip = FNT::lineSkip()
+
+    val lines = @{}
+    loop line in t.string::gmatch("([^\r\n]+)"){
+        table.insert(lines,line)
+    }
+
+    val tex = @{}
+    loop _,v in lines {
+        set tex[+] = texture where {
+            sfc = FNT::renderUtf8(v,"blended", color, 0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    every :sdl,draw {
+        ;;REN::setDrawColor(0xFFFFFF)
+        ;;REN::fillRect(@{x=80,y=300,w=1365,h=140}) ;;Decifrar tamanho de w
+        var height = t.y_start
+        loop i in #lines {
+            set tw, th = FNT::sizeText(lines[i])
+            REN::copy(tex[i],nil,@{x=t.x_start,y=height,w=tw,h=th})
+            set height = height + skip
+        }
+    }
+}
+
+func M.FrontCover (t) {
+    val FNT1 = TTF.open("DejaVuSans.ttf",40) --> assert
+    val FNT2 = TTF.open("DejaVuSans.ttf",30) --> assert
+    
+    val title = tex where {
+        sfc = FNT1::renderUtf8(t.titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val autor = tex where {
+        sfc = FNT2::renderUtf8(t.autorstr,"blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val uni = tex where {
+        sfc = FNT2::renderUtf8(t.unistr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val date = tex where {
+        sfc = FNT2::renderUtf8(t.datestr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+
+    every :sdl.draw{
+
+        set tw, th = FNT1::sizeText(t.titlestr)
+        REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.autorstr)
+        REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.unistr)
+        REN::copy(uni,nil,@{x=(1500/2)-((tw/2)-->F),y=695,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.datestr)
+        REN::copy(date,nil,@{x=(1500/2)-((tw/2)-->F),y=740,w=tw,h=th})
+    }
+}
+
+func M.BulletList (t) {
+
+    val dot_img = tex where {
+        sfc = IMG.load("dot.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val FNT = TTF.open("DejaVuSans.ttf",30)--> assert
+
+    val lines = @{}
+    loop line in t.string::gmatch("([^\r\n]+)"){
+        table.insert(lines,line)
+    }
+
+
+    val tex = @{}
+
+    loop _,v in lines {
+        set tex[+] = texture where {
+            sfc = FNT::renderUtf8(v,"blended", 0x000000, 0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    var n = #lines
+
+    par {
+        if (t.anim){
+            set n = 0
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Up => {
+                        if n > 0 {
+                            set n = n - 1
+                        }
+                    }
+                    :Down => {
+                        if n < #lines {
+                            set n = n + 1
+                        }
+
+                    }
+                }
+            }
+        }
+    } with {
+        every :sdl,draw {
+            var bullet_height = 300
+            loop i in n {
+                REN::copy(dot_img,nil,@{x=20,y=bullet_height,w=30,h=30})
+                set tw, th = FNT::sizeText(lines[i])
+                REN::copy(tex[i],nil,@{x=80,y=bullet_height,w=tw,h=th})
+                set bullet_height = bullet_height + 100
+            }
+        }
+    }
+
+
+    ;;-- t = @{animated=true}
+}
+
+func M.Show(s){
+    var cur = 1
+    val slide_number = #s
+    do :Repetition{
+        loop{
+            spawn s[cur]()  
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Left => {
+                        if cur > 1 {
+                            set cur = cur - 1
+                            break()
+                            ;;trans::playChannel(2,-1,1500)
+                        }
+                    }
+                    :Right => {
+                        if cur < slide_number {
+                            set cur = cur + 1
+                            break()
+                            ;;trans::playChannel(2,-1,1500)
+                        }
+                    }
+                    :Return =>{
+                        escape(:Repetition)
+                    }
+                }
+                
+            }
+        }
+    }
+}
+
+M

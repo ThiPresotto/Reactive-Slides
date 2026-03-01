@@ -1,36 +1,49 @@
+;;set sdl = require "atmos.env.sdl"
+
+;;await @1
+
+val b = @{
+        anim = true,
+        text = ```[[
+            Caracteristicas Necessarias
+            Sem programas vazios/sem byte
+            Sem usar leitura de arquivos para ler a si mesmo
+            A saída precisa ser idêntica ao código fonte.
+        ]]```,
+}
+
+val s = ```[[
+        Caracteristicas Necessarias
+        Sem programas vazios/sem byte
+        Sem usar leitura de arquivos para ler a si mesmo
+        A saída precisa ser idêntica ao código fonte.
+    ]]```
 ;;;
-func ha (t){
-    print(t[1],t[2],t[3])
+val lines = @{}
+loop line in s:gmatch("([^\r\n]+)"){
+    print("ok")
 }
 
-val tabi = @{"apple","banana","cherry"}
-set tabi[#tabi + 1] = "date"
-val l_size = #tabi
-print(l_size)
-print(table.concat(tabi,", "))
-print(tabi[1],tabi[4],tabi[0])
-
-ha(tabi)
+for line in text:gmatch("([^\r\n]+)") do
+    table.insert(lines, line)
 ;;;
 
-val colorPalette = @{
-    black = 0x000000,
-    white = 0xFFFFFF,
-    red = 0xFF0000,
-    green = 0x00FF00,
-    blue = 0x0000FF,
-    yellow = 0xFFFF00,
-    cyan = 0x00FFFF,
-    magenta = 0xFF00FF
+val lines = @{}
+loop line in s::gmatch("([^\r\n]+)"){
+    print("ok")
 }
 
-func background_color(text){
-    set color = colorPalette[text]
-    every :sdl.draw{
-        REN::setDrawColor(color)
-        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
-    }
+val lines = @{"abc", "oioioi"}
+loop _, line in lines{
+    print(line)
 }
+
+
+
+print(b.text)
+
+
+;;;
 
 set SDL = require "SDL"
 set IMG = require "SDL.image"
@@ -64,13 +77,4 @@ val WIN = SDL.createWindow @{
 
 set REN = SDL.createRenderer(WIN, -1) --> assert
 set sdl.ren = REN
-
-val string = """Issio e uma string
-                multilinha"""
-
-;;spawn background_color("red")
-
-
-print(string)
-
-await @5
+;;;

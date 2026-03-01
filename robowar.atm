@@ -1,0 +1,139 @@
+val S = require "slides"
+
+S.open("Robowar",1500,1000)
+defer{
+    S.close()
+}
+
+func Slide1(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.FrontCover @{titlestr = "Robotica em Guerra", autorstr = "Thiago Presotto Moreira",unistr = "Universidade do Estado do Rio de Janeiro", datestr = "20/10/2025","quine.png"}
+    await(false)
+}
+
+func Slide2(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Guerra Justa",title_clr = S.colors.black}
+    spawn S.BulletList @{ string = ```[[1.Jus ad Bellum
+2.Jus in Bellum
+3.Jus post Bellum]]```, anim = true}
+    await(false)
+
+}
+
+func Slide3(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Jus Ad Bellum: Quando é Justo Lutar", title_clr = S.colors.black}
+    spawn S.BulletList @{ string = ```[[1.Causa justa
+2.Autoridade reconhecida
+3.Intenção moral e correta
+4.Proporcionalidade
+5.Ultimo recurso]]```, anim = true}
+    await(false)
+} 
+
+func Slide4(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Jus in Bello: Como lutar corretamente", title_clr = S.colors.black}
+    spawn S.BulletList @{ string = ```[[1.Distinção de alvos militares a alvos civis
+2.Evitar danos colaterais
+3.Não exceder a necessidade militar]]```, anim = true}
+    await(false)
+}
+
+func Slide5(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Jus post bellum: Como encerrar a Guerra", title_clr = S.colors.black}
+    spawn S.BulletList @{ string = ```[[1.Reparações justas
+2.Reconciliação
+3.Planos de reconstrução]]```, anim = true}
+    await(false)
+}
+
+func Slide6(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Armas Autônomas", title_clr = S.colors.black}
+    spawn S.Text @{string = ```[[Definição: Sistemas de armamento capazes de 
+identificar, selecionar e atacar alvos sem intervenção 
+humana em tempo real.
+
+Utilizam IA, sensores e algoritmos de tomada de 
+decisão complexos
+
+Autônomo vs Automatizado]]```,
+                font_size = 30, str_clr = S.colors.black,x_start = 80, y_start = 300}
+    await(false)
+}
+
+func Slide7(){
+    spawn S.BackgroundColor(S.colors.black)
+    spawn S.Text @{string = ```[[COMO MANTER OS 3 
+PILARES DE GUERRA
+JUSTA NA CRESCENTE DE
+CONFLITOS ARMADOS
+AUTÔNOMOS]]```,
+                font_size = 45, str_clr = S.colors.white,x_start = 40, y_start = 300}
+    await(false)
+}
+
+func Slide8(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "01/06/2025", title_clr = S.colors.black}
+    spawn S.Image @{pos = S.fs.O,path = "./ROBOWAR/war1.jpg",scale = 0.8}
+    spawn S.Image @{pos = S.fs.L,path = "./ROBOWAR/war2.jpg",scale = 0.5}
+    spawn S.Text @{string = ```[[Ataques de drones autônomos Ucranianos à aviões Russos]]```,
+                font_size = 25, str_clr = S.colors.black,x_start = 40, y_start = 300}
+    await(false)
+}
+
+func Slide9(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Tecnologia Autonoma e Jus ad Bellum", title_clr = S.colors.black}
+    spawn S.Text @{string = ```[[Como tecnologia autônomas podem interferir em um
+país entrar em guerra? 
+ 
+Erros técnicos e guerras acidentais 
+ 
+Revolta das máquinas colocando em risco a soberania de
+um Estado 
+ 
+Barreira para entrar em guerra menor]]```,
+                font_size = 30, str_clr = S.colors.black,x_start = 80, y_start = 300}
+    await(false) 
+}
+
+func Slide10(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Tecnologia Autonoma e Jus in Bello", title_clr = S.colors.black}
+    spawn S.Text @{string = ```[[Como tecnologia autônomas afetam a justiça de um conflito 
+ 
+Capacidade de distinção entre combatentes e civis
+ 
+Ameaça de combate entre um exército totalmente humano vs
+totalmente não-humano
+ 
+Guerra de botão, distanciamente/apatia aos danos
+infligido ao outro
+ 
+Crise moral: Poder de escolha decidido por algoritmos?]]```,
+                font_size = 30, str_clr = S.colors.black,x_start = 80, y_start = 300}
+    await(false) 
+}
+
+func Slide11(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Title @{title = "Tecnologia Autonoma e Jus post Bellum", title_clr = S.colors.black}
+    spawn S.Text @{string = ```[[Como tecnologia autônomas podem atrapalhar a
+justiça ea reconciliação pós-guerra? 
+ 
+Atribuição de responsabilidade por crimes de guerra
+ 
+Reconstrução e desmilitarização: Armas
+autônomas operantes após o conflito]]```,
+                font_size = 30, str_clr = S.colors.black,x_start = 80, y_start = 300}
+    await(false) 
+}
+
+val slide_set = @{Slide1,Slide2,Slide3,Slide4,Slide5,Slide6,Slide7,Slide8,Slide9,Slide10,Slide11}
+await S.Show (slide_set)
+
