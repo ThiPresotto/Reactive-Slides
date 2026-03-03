@@ -146,6 +146,9 @@ mãos.
 ]]```,
                 font_size = 45, str_clr = S.colors.yellow,x_start = 80, y_start = 250}
     spawn S.Title @{title = "CULINARIA MARROQUINA",title_clr = S.colors.black}
+        spawn S.Image @{pos = S.fs.S,path = "MARROCOS/comida1.jpg",scale = 0.7}
+    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/comida2.jpg",scale = 0.7}
+    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/comida3.jpg",scale = 0.8}
     await(false)
 }
 

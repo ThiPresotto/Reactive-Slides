@@ -125,6 +125,14 @@ set M.fs = @{
             h=(h*scale)-->F,
         }
     },
+    NL = \(w,h,scale) {
+        @{
+            x=((1500/2)+375)-(((w*scale)/2)-->F),
+            y=((1000/2)-250)-(((h*scale)/2)-->F),
+            w=(w*scale)-->F,
+            h=(h*scale)-->F,
+        }
+    },
 }
 
 

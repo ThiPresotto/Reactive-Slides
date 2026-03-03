@@ -19,6 +19,7 @@ slides.Image
         path::string .. caminho da imagem.
         pos::string  .. posição da imagem no slide, precisa ser uma chave da
                         tabela "fs". 
+        scale::float .. Operação de escala na imagem, precisa ser positivo
 }
 ```
 ---
@@ -56,4 +57,50 @@ slides.BulletList
         anim::bool      .. true  -> os bullets são apresentados um a um através das setas Up e Down
                            false -> as informações são apresentadas diretamente na tela
 }
+```
+---
+
+slides.fs
+
+--> Tabela com posição do objeto em relação à janela
+
+```
+
+@{
+
+C .. Centro
+L .. Leste
+O .. Oeste
+N .. Norte
+S .. Sul
+SL .. Sudeste
+SO .. Sudoeste
+NO .. Noroeste
+NL .. Nordeste
+
+}
+
+```
+
+---  
+
+slides.BackgroundColor
+
+--> Tabela de cores de fundo
+
+```
+
+@{
+
+black .. 0x000000,
+white .. 0xFFFFFF,
+red .. 0xFF0000,
+green .. 0x00FF00,
+blue .. 0x0000FF,
+yellow .. 0xFFFF00,
+cyan .. 0x00FFFF,
+magenta .. 0xFF00FF
+
+}
+
 ```

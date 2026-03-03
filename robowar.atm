@@ -56,12 +56,12 @@ func Slide6(){
     spawn S.Text @{string = ```[[Definição: Sistemas de armamento capazes de 
 identificar, selecionar e atacar alvos sem intervenção 
 humana em tempo real.
-
+ 
 Utilizam IA, sensores e algoritmos de tomada de 
 decisão complexos
-
+ 
 Autônomo vs Automatizado]]```,
-                font_size = 30, str_clr = S.colors.black,x_start = 80, y_start = 300}
+                font_size = 30, str_clr = S.colors.black,x_start = 350, y_start = 300}
     await(false)
 }
 
@@ -72,17 +72,17 @@ PILARES DE GUERRA
 JUSTA NA CRESCENTE DE
 CONFLITOS ARMADOS
 AUTÔNOMOS]]```,
-                font_size = 45, str_clr = S.colors.white,x_start = 40, y_start = 300}
+                font_size = 45, str_clr = S.colors.white,x_start = 400, y_start = 300}
     await(false)
 }
 
 func Slide8(){
     spawn S.BackgroundColor(S.colors.white)
     spawn S.Title @{title = "01/06/2025", title_clr = S.colors.black}
-    spawn S.Image @{pos = S.fs.O,path = "./ROBOWAR/war1.jpg",scale = 0.8}
+    spawn S.Image @{pos = S.fs.O,path = "./ROBOWAR/war1.jpg",scale = 0.7}
     spawn S.Image @{pos = S.fs.L,path = "./ROBOWAR/war2.jpg",scale = 0.5}
     spawn S.Text @{string = ```[[Ataques de drones autônomos Ucranianos à aviões Russos]]```,
-                font_size = 25, str_clr = S.colors.black,x_start = 40, y_start = 300}
+                font_size = 25, str_clr = S.colors.black,x_start = 300, y_start = 800}
     await(false)
 }
 
@@ -134,6 +134,13 @@ autônomas operantes após o conflito]]```,
     await(false) 
 }
 
-val slide_set = @{Slide1,Slide2,Slide3,Slide4,Slide5,Slide6,Slide7,Slide8,Slide9,Slide10,Slide11}
+func Slide12(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Text @{string = ```[[OBRIGADO PELA ATENÇÃO]]```,
+                font_size = 50, str_clr = S.colors.black,x_start = 420, y_start = 450}
+    await(false) 
+}
+
+val slide_set = @{Slide1,Slide2,Slide3,Slide4,Slide5,Slide6,Slide7,Slide8,Slide9,Slide10,Slide11,Slide12}
 await S.Show (slide_set)
 
