@@ -12,7 +12,7 @@ func Slide1(){
                         unistr = "Colegio ", 
                         datestr = "??/??/2015",}
     spawn S.Image @{pos = S.fs.O,path = "MARROCOS/marrocos_flag.jpg",scale = 1.5}
-    spawn S.Image @{pos = S.fs.L,path = "MARROCOS/map.gif",scale = 0.5}
+    spawn S.Image @{pos = S.fs.L,path = "MARROCOS/map.png",scale = 0.5}
     await(false)
 }
 
@@ -50,8 +50,8 @@ esse motivo existe uma variedade linguística entre
 fala espanhol com facilidade e faz fronteira com três
 países(Argélia, Mauritânia e Espanha).
 ]]```,
-                font_size = 45, str_clr = S.colors.yellow,x_start = 80, y_start = 160}
-    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/map2.gif",scale = 0.8}
+                font_size = S.sizes.text.normal, str_clr = S.colors.yellow,x_start = 80, y_start = 160}
+    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/map2.png",scale = 0.8}
     await(false)  
 }
 
@@ -127,9 +127,9 @@ muçulmana é vincada só que com grande interferência
 europeia.
 ]]```,
                 font_size = 45, str_clr = S.colors.yellow,x_start = 80, y_start = 160}
-    spawn S.Image @{pos = S.fs.S,path = "MARROCOS/djellaba.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/danca.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/deco.jpg",scale = 0.8}
+    spawn S.Image @{pos = S.fs.S,path = "MARROCOS/cultura1.jpg",scale = 0.7}
+    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/cultura2.jpg",scale = 0.7}
+    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/cultura3.jpg",scale = 0.8}
     await (false)
 }
 
