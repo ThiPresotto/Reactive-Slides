@@ -12,13 +12,39 @@ func Slide1(){
     await(false)
 }
 
+func Slide4(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Slide_Title_OneObject @{title = "O que esperar?",
+    object1 = ```[[Marrocos se encontra na África setentrional e é
+banhado pelo oceano atlântico e mar mediterrâneo,
+Marrocos possui 446 550 de área. Como Hassan II
+disse “Marrocos é como uma árvore com raízes da
+África, mas cujas folhas respiram o ar Europeu’’. Por
+esse motivo existe uma variedade linguística entre
+árabe, berbere(povo nômade), francês e grande parte
+fala espanhol com facilidade e faz fronteira com três
+países(Argélia, Mauritânia e Espanha).
+]]```,
+    tag1=S.content.text}
+    await(false)
+}
+
+func Slide5(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Slide_Title_OneObject @{title = "Imagem de C",
+    object1 = "C_logo.png",
+    tag1 = S.content.image}
+    await(false)
+}
+
 func Slide2(){
     spawn S.BackgroundColor(S.colors.white)
-    spawn S.Title @{title = "Caracteristicas Necessarias",title_clr = S.colors.black}
-    spawn S.BulletList @{ string = ```[[Caracteristicas Necessarias
-    Sem programas vazios/sem byte
-    Sem usar leitura de arquivos para ler a si mesmo
-    A saída precisa ser idêntica ao código fonte.]]```, anim = true}
+    spawn S.Slide_Title_OneObject @{title = "Caracteristicas Necessarias",
+    object1=@{"Caracteristicas Necessarias",
+    "Sem programas vazios/sem byte",
+    "Sem usar leitura de arquivos para ler a si mesmo",
+    "A saída precisa ser idêntica ao código fonte."},
+    tag1 = S.content.bullet}
     spawn S.Image @{pos = S.fs.L, path= "C_logo.png",scale = 0.5}
     await(false)
 
@@ -35,6 +61,21 @@ printf(s,10,34,s,34);return 0;}]]```,
     await(false)  
 }
 
-val slide_set = @{Slide1,Slide2,Slide3}
+func Slide6() {
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.Slide_Title_TwoObjects @{title = "Slide teste para Slide_Title_TwoObjects",
+    tag1 = S.content.text, object1 = ```[[Testando os limites de tabela
+quanto que esse texto pode ser escrito
+sem invadir a área ao lado ou a área de transição,
+futuramente pretendo fazer uma função que calcule o tamanho
+estimado para que não invada.
+]]```,
+tag2 = S.content.image,
+object2 = "dot.png"}
+    await(false)
+}
+    
+
+val slide_set = @{Slide6,Slide1,Slide4,Slide5,Slide2,Slide3}
 await S.Show (slide_set)
 

@@ -62,27 +62,27 @@ func Slide_Front(t)
 ```
 ---
 
-func Slide_Title-OneInfo(t)
+func Slide_Title-OneObject(t)
 --> Template para slide com título e informação, a tabela t aceita os seguintes campos...
 ```
 
 @{
         todos os campos são opcionais
         title              .. titulo do slide atual, apresentado no topo da página
-        info1              .. informação apresentada no slide.
+        object1              .. informação apresentada no slide.
 }
 ```
 ---
 
-func Slide_Title-TwoInfo(t)
+func Slide_Title-TwoObjects(t)
 --> Template para slide com título e informação posta lado a lado, a tabela t aceita os seguintes campos...
 ```
 
 @{
         todos os campos são opcionais
         title              .. titulo do slide atual, apresentado no topo da página
-        info1              .. informação apresentada no slide na coluna da esquerda. @{tag,conteudo}
-        info2              .. informação apresentada no slide na coluna da direita.
+        data1              .. informação apresentada no slide na coluna da esquerda. @{tag,conteudo}
+        data2              .. informação apresentada no slide na coluna da direita.
 }
 ```
 ---

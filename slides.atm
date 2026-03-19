@@ -57,7 +57,7 @@ set M.colors = @{
     cyan = 0x00FFFF,
     magenta = 0xFF00FF
 }
-;;;
+
 set M.sizes = @{
     text = @{
         tiny = 15,
@@ -76,9 +76,9 @@ set M.sizes = @{
         giant = 6,
     }
 }
-;;;
 
-set M.Tag = @{
+
+set M.content = @{
     text = 1,
     image = 2,
     bullet = 3,
@@ -166,6 +166,8 @@ set M.fs = @{
     },
 }
 
+;;=====================================================================================================
+
 func M.BackgroundColor(clr_value){
     val color = clr_value || 0xFFFFFF
     every :sdl.draw{
@@ -221,6 +223,8 @@ func M.Text(t){
     }
 }
 
+
+
 func M.BulletList (t) {
 
     val dot_img = tex where {
@@ -230,6 +234,16 @@ func M.BulletList (t) {
 
     val FNT = TTF.open("DejaVuSans.ttf",30)--> assert
 
+    val tex = @{}
+    loop _,v in t.items{
+        set tex[+] = texture where {
+            sfc = FNT:: renderUtf8(v,"blended",0x000000,0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+    var n=#tex
+
+;;;
     val lines = @{}
     loop line in t.string::gmatch("([^\r\n]+)"){
         table.insert(lines,line)
@@ -246,6 +260,7 @@ func M.BulletList (t) {
     }
 
     var n = #lines
+;;;
 
     par {
         if (t.anim){
@@ -259,7 +274,7 @@ func M.BulletList (t) {
                         }
                     }
                     :Down => {
-                        if n < #lines {
+                        if n < #tex {
                             set n = n + 1
                         }
 
@@ -272,7 +287,7 @@ func M.BulletList (t) {
             var bullet_height = 300
             loop i in n {
                 REN::copy(dot_img,nil,@{x=20,y=bullet_height,w=30,h=30})
-                set tw, th = FNT::sizeText(lines[i])
+                set tw, th = FNT::sizeText(t.items[i])
                 REN::copy(tex[i],nil,@{x=80,y=bullet_height,w=tw,h=th})
                 set bullet_height = bullet_height + 100
             }
@@ -283,6 +298,8 @@ func M.BulletList (t) {
     ;;-- t = @{animated=true}
 }
 
+;;=====================================================================================================
+
 func M.FrontCover (t) {
     val FNT1 = TTF.open("DejaVuSans.ttf",40) --> assert
     val FNT2 = TTF.open("DejaVuSans.ttf",30) --> assert
@@ -291,7 +308,12 @@ func M.FrontCover (t) {
         sfc = FNT1::renderUtf8(t.titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
-
+;;;
+    val sub = tex where {
+        sfc = FNT1::renderUtf8(t.subtitlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+;;;
     val autor = tex where {
         sfc = FNT2::renderUtf8(t.autorstr,"blended", 0x000000, 0x000000)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
@@ -312,7 +334,10 @@ func M.FrontCover (t) {
 
         set tw, th = FNT1::sizeText(t.titlestr)
         REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
-
+;;;
+        set tw, th = FNT2::sizeText(t.subtitlestr)
+        REN::copy(sub,nil,@{x=(1500/2)-((tw/2)-->F),y=250,w=tw,h=th})
+;;;
         set tw, th = FNT2::sizeText(t.autorstr)
         REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
 
@@ -339,6 +364,99 @@ func M.Title(t) {
         REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
     }
 }
+
+func M.Slide_Title_OneObject(t){
+    
+    par_or{
+        ifs{
+            t.tag1 == 1 => {
+                spawn M.Text @{string = t.object1,
+                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 160}
+                await(false)
+            }
+            t.tag1 == 2 => {
+                spawn M.Image@{path = t.object1, pos = M.fs.C, scale = 0.5}
+                await(false)
+            }
+            t.tag1 == 3 => {
+                spawn M.BulletList @{items = t.object1, anim = true}
+                await(false)
+            }
+        }
+    }with{
+        spawn M.Title @{title = t.title, title_clr = 0x00FFFF}
+        await(false)
+        ;;;
+        val TITLE = TTF.open("DejaVuSans.ttf",40)
+        val CONTENT = TTF.open("DejaVuSans.ttf",30)
+
+        val title_texture = tex where {
+            sfc = TITLE::renderUtf8(t.title,"blended", color, 0x000000)-->assert
+            tex = REN::createTextureFromSurface(sfc)-->assert
+        }
+
+        val content_texture = tex where {
+            sfc = CONTENT::renderUtf8(t.object1,"blended", color, 0x000000)-->assert
+            tex = REN::createTextureFromSurface(sfc)-->assert
+        }
+
+        every :sdl.draw{
+            set tw, th = TITLE::sizeText(t.title)
+            REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
+
+            set tw, th = CONTENT::sizeText(t.object1)
+            REN::copy(content_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=450,w=tw,h=th})
+        }
+        ;;;
+    }
+}
+
+func M.Slide_Title_TwoObjects(t){
+    par_or{
+        ifs{
+            t.tag1 == 1 => {
+                spawn M.Text @{string = t.object1,
+                font_size = M.sizes.text.normal, str_clr = M.colors.black,x_start = 80, y_start = 160}
+                await(false)
+            }
+            t.tag1 == 2 => {
+                spawn M.Image@{path = t.object1, pos = M.fs.O, scale = 0.5}
+                await(false)
+            }
+            t.tag1 == 3 => {
+                spawn M.BulletList @{items = t.object1, anim = true}
+                await(false)
+            }
+        }
+    }with{
+        ifs{
+            t.tag2 == 1 => {
+                spawn M.Text @{string = t.object2,
+                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 715}
+                await(false)
+            }
+            t.tag2 == 2 => {
+                spawn M.Image@{path = t.object2, pos = M.fs.L, scale = 0.5}
+                await(false)
+            }
+            t.tag2 == 3 => {
+                spawn M.BulletList @{items = t.object2, anim = true}
+                await(false)
+            }
+        }
+    }with{
+        spawn M.Title @{title = t.title, title_clr = 0x00FFFF}
+        await(false)
+    }with{
+        every :sdl.draw{
+            REN::setDrawColor(0xFF0000)
+            REN::fillRect@{x=695,y=0,w=80,h=1000}
+        }
+    }
+}
+
+
+;;=====================================================================================================
 
 func M.Show(s){
     var cur = 1
