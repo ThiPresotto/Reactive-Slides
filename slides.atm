@@ -47,6 +47,9 @@ func M.close(){
     MIX.quit()
 }
 
+;;=====================================================================================================
+;;TABELAS
+
 set M.colors = @{
     black = 0x000000,
     white = 0xFFFFFF,
@@ -166,12 +169,29 @@ set M.fs = @{
 }
 
 ;;=====================================================================================================
+;;ELEMENTOS BASE
 
 func M.BackgroundColor(clr_value){
     val color = clr_value || 0xFFFFFF
     every :sdl.draw{
         REN::setDrawColor(color)
         REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+    }
+}
+
+func M.Title(t) {
+   
+    val color = t.title_clr || 0x000000
+    val FNT = TTF.open("DejaVuSans.ttf",50) --> assert
+
+    val title_texture = tex where {
+        sfc = FNT::renderUtf8(t.title,"blended", color, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    every :sdl.draw{
+        set tw, th = FNT::sizeText(t.title)
+        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
     }
 }
 
@@ -280,6 +300,7 @@ func M.BulletList (t) {
 }
 
 ;;=====================================================================================================
+;;TEMPLATES DE SLIDES
 
 func M.FrontCover (t) {
     val FNT1 = TTF.open("DejaVuSans.ttf",40) --> assert
@@ -327,22 +348,6 @@ func M.FrontCover (t) {
 
         set tw, th = FNT2::sizeText(t.datestr)
         REN::copy(date,nil,@{x=(1500/2)-((tw/2)-->F),y=740,w=tw,h=th})
-    }
-}
-
-func M.Title(t) {
-   
-    val color = t.title_clr || 0x000000
-    val FNT = TTF.open("DejaVuSans.ttf",50) --> assert
-
-    val title_texture = tex where {
-        sfc = FNT::renderUtf8(t.title,"blended", color, 0x000000)-->assert
-        tex = REN::createTextureFromSurface(sfc)-->assert
-    }
-
-    every :sdl.draw{
-        set tw, th = FNT::sizeText(t.title)
-        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
     }
 }
 
