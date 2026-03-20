@@ -84,7 +84,6 @@ set M.content = @{
     bullet = 3,
 }
 
-;;TODO ordered and unordered list 
 set M.lt = @{
     OL = 1,
     UL = 2,
@@ -243,25 +242,6 @@ func M.BulletList (t) {
     }
     var n=#tex
 
-;;;
-    val lines = @{}
-    loop line in t.string::gmatch("([^\r\n]+)"){
-        table.insert(lines,line)
-    }
-
-
-    val tex = @{}
-
-    loop _,v in lines {
-        set tex[+] = texture where {
-            sfc = FNT::renderUtf8(v,"blended", 0x000000, 0x000000)-->assert
-            texture = REN::createTextureFromSurface(sfc)-->assert
-        }
-    }
-
-    var n = #lines
-;;;
-
     par {
         if (t.anim){
             set n = 0
@@ -283,12 +263,13 @@ func M.BulletList (t) {
             }
         }
     } with {
+        val bullet_x = t.x_start - 60
         every :sdl,draw {
-            var bullet_height = 300
+            var bullet_height = t.y_start
             loop i in n {
-                REN::copy(dot_img,nil,@{x=20,y=bullet_height,w=30,h=30})
+                REN::copy(dot_img,nil,@{x=bullet_x,y=bullet_height,w=30,h=30})
                 set tw, th = FNT::sizeText(t.items[i])
-                REN::copy(tex[i],nil,@{x=80,y=bullet_height,w=tw,h=th})
+                REN::copy(tex[i],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
                 set bullet_height = bullet_height + 100
             }
         }
@@ -379,35 +360,14 @@ func M.Slide_Title_OneObject(t){
                 await(false)
             }
             t.tag1 == 3 => {
-                spawn M.BulletList @{items = t.object1, anim = true}
+                spawn M.BulletList @{items = t.object1, anim = true,
+                y_start=300,x_start=80}
                 await(false)
             }
         }
     }with{
         spawn M.Title @{title = t.title, title_clr = 0x00FFFF}
         await(false)
-        ;;;
-        val TITLE = TTF.open("DejaVuSans.ttf",40)
-        val CONTENT = TTF.open("DejaVuSans.ttf",30)
-
-        val title_texture = tex where {
-            sfc = TITLE::renderUtf8(t.title,"blended", color, 0x000000)-->assert
-            tex = REN::createTextureFromSurface(sfc)-->assert
-        }
-
-        val content_texture = tex where {
-            sfc = CONTENT::renderUtf8(t.object1,"blended", color, 0x000000)-->assert
-            tex = REN::createTextureFromSurface(sfc)-->assert
-        }
-
-        every :sdl.draw{
-            set tw, th = TITLE::sizeText(t.title)
-            REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
-
-            set tw, th = CONTENT::sizeText(t.object1)
-            REN::copy(content_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=450,w=tw,h=th})
-        }
-        ;;;
     }
 }
 
@@ -424,7 +384,8 @@ func M.Slide_Title_TwoObjects(t){
                 await(false)
             }
             t.tag1 == 3 => {
-                spawn M.BulletList @{items = t.object1, anim = true}
+                spawn M.BulletList @{items = t.object1, anim = false,
+                y_start=300,x_start=80}
                 await(false)
             }
         }
@@ -440,7 +401,8 @@ func M.Slide_Title_TwoObjects(t){
                 await(false)
             }
             t.tag2 == 3 => {
-                spawn M.BulletList @{items = t.object2, anim = true}
+                spawn M.BulletList @{items = t.object2, anim = false,
+                y_start=300,x_start=775}
                 await(false)
             }
         }
