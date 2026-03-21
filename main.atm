@@ -81,8 +81,7 @@ func Slide7() {
     tag1= S.content.bullet, object1= @{"Anos dos títulos","1974","1989","1997","2001"},
     tag2= S.content.bullet, object2= @{"Anos dos titulos","1970","1984","2010","2012"}}
     await(false)
-}
-    
+}   
 
 val slide_set = @{Slide1,Slide2,Slide3,Slide4,Slide5,Slide6,Slide7}
 await S.Show (slide_set)

@@ -402,12 +402,12 @@ func M.Slide_Title_TwoObjects(t){
                 await(false)
             }
             t.tag2 == 2 => {
-                spawn M.Image@{path = t.object2, pos = M.fs.L, scale = 0.5}
+                spawn M.Image@{path = t.object2, pos = M.fs.L, scale = 0.05}
                 await(false)
             }
             t.tag2 == 3 => {
                 spawn M.BulletList @{items = t.object2, anim = false,
-                y_start=300,x_start=775}
+                y_start=300,x_start=835}
                 await(false)
             }
         }
@@ -457,5 +457,11 @@ func M.Show(s){
         }
     }
 }
+
+func M.new_image_size(t){
+
+}
+t.w 
+t.h
 
 M
