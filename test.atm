@@ -1,0 +1,23 @@
+val S = require "slides"
+
+S.open("Apresentação",1500,1000)
+defer{
+    S.close()
+}
+
+func Slide1(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.FrontCover @{titlestr = "Quine Program", subtitlestr = " ", autorstr = "Thiago Presotto Moreira",unistr = "Universidade do Estado do Rio de Janeiro", datestr = "20/10/1984","quine.png"}
+    spawn S.Image @{pos = S.fs.C,path = "quine.png",scale = S.sizes.image.medium}
+    await(false)
+}
+
+func Slide2(){
+    spawn S.BackgroundColor(S.colors.white)
+    spawn S.TitleBulletList @{items = @{"Anos dos titulos","1970","1984","2010","2012"},anim = true,
+    y_start=300,x_start=80}
+    await(false)
+}
+
+val slide_set = @{Slide1,Slide2}
+await S.Show (slide_set)

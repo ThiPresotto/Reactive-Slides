@@ -47,6 +47,21 @@ func M.close(){
     MIX.quit()
 }
 
+func M.new_image_size(t){
+    var new = @{w = nil, h = nil}
+    ifs{
+        t.w <= t.h => {
+            set new.w = t.ratio
+            set new.h = ((t.h/t.w)*new.w)-->F
+        }
+        t.h < t.w => {
+            set new.h = t.ratio
+            set new.w = ((t.w/t.h)*new.h)-->F
+        }
+    }
+    new
+}
+
 ;;=====================================================================================================
 ;;TABELAS
 
@@ -71,12 +86,11 @@ set M.sizes = @{
         giant = 80,
         },
     image = @{
-        tiny = 1,
-        small = 2,
-        medium = 3,
-        normal = 4,
-        large = 5,
-        giant = 6,
+        tiny = 100,
+        small = 150,
+        medium = 300,
+        large = 500,
+        giant = 750,
     }
 }
 
@@ -85,6 +99,7 @@ set M.content = @{
     text = 1,
     image = 2,
     bullet = 3,
+    titled_bullet = 4,
 }
 
 set M.lt = @{
@@ -94,76 +109,76 @@ set M.lt = @{
 
 
 set M.fs = @{
-    C = \(w,h,scale) {
+    C = \(length) {
         @{
-            x=(1500/2)-(((w*scale)/2)-->F),
-            y=(1000/2)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    L = \(w,h,scale) {
+    L = \(length) {
         @{
-            x=((1500/2)+375)-(((w*scale)/2)-->F),
-            y=(1000/2)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    O = \(w,h,scale) {
+    O = \(length) {
         @{
-            x=((1500/2)-375)-(((w*scale)/2)-->F),
-            y=(1000/2)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    N = \(w,h,scale) {
+    N = \(length) {
         @{
-            x=(1500/2)-(((w*scale)/2)-->F),
-            y=((1000/2)-250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    S = \(w,h,scale) {
+    S = \(length) {
         @{
-            x=(1500/2)-(((w*scale)/2)-->F),
-            y=((1000/2)+250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    SL = \(w,h,scale) {
+    SL = \(length) {
         @{
-            x=((1500/2)+375)-(((w*scale)/2)-->F),
-            y=((1000/2)+250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    SO = \(w,h,scale) {
+    SO = \(length) {
         @{
-            x=((1500/2)-375)-(((w*scale)/2)-->F),
-            y=((1000/2)+250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    NO = \(w,h,scale) {
+    NO = \(length) {
         @{
-            x=((1500/2)-375)-(((w*scale)/2)-->F),
-            y=((1000/2)-250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
-    NL = \(w,h,scale) {
+    NL = \(length) {
         @{
-            x=((1500/2)+375)-(((w*scale)/2)-->F),
-            y=((1000/2)-250)-(((h*scale)/2)-->F),
-            w=(w*scale)-->F,
-            h=(h*scale)-->F,
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
         }
     },
 }
@@ -204,9 +219,9 @@ func M.Image(t){
     }
 
     val _,_,img_w,img_h = slide_image::query()
-
+    val new = M.new_image_size @{w = img_w,h=img_h,ratio = scale}
     every :sdl.draw{
-        REN::copy(slide_image,nil, t.pos(img_w,img_h,scale))
+        REN::copy(slide_image,nil, t.pos(new))
     }
 }
 
@@ -299,6 +314,75 @@ func M.BulletList (t) {
     ;;-- t = @{animated=true}
 }
 
+func M.TitleBulletList (t) {
+
+    val dot_img = tex where {
+        sfc = IMG.load("dot.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val FNTT = TTF.open("DejaVuSans.ttf",50)--> assert
+    val FNT = TTF.open("DejaVuSans.ttf",30)--> assert
+
+    var tex = @{}
+    loop _,v in t.items{
+        set tex[+] = texture where {
+            sfc = FNT:: renderUtf8(v,"blended",0x000000,0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    set tex[1] = texture where {
+        sfc = FNTT:: renderUtf8(t.items[1],"blended",0x000000,0x000000)-->assert
+        texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+
+    var n=#tex
+
+    par {
+        if (t.anim){
+            set n = 1
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Up => {
+                        if n > 1 {
+                            set n = n - 1
+                        }
+                    }
+                    :Down => {
+                        if n < #tex {
+                            set n = n + 1
+                        }
+
+                    }
+                }
+            }
+        }
+    } with {
+        every :sdl,draw {
+            var bullet_height = t.y_start
+            set tw, th = FNTT::sizeText(t.items[1])
+            REN::copy(tex[1],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
+        }
+    } with {
+        val bullet_x = t.x_start - 60
+        every :sdl,draw {
+            var bullet_height = t.y_start
+            loop i in (n-1) {
+                REN::copy(dot_img,nil,@{x=bullet_x,y=bullet_height,w=30,h=30})
+                set tw, th = FNT::sizeText(t.items[i+1])
+                REN::copy(tex[i+1],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
+                set bullet_height = bullet_height + 100
+            }
+        }
+    }
+
+
+    ;;-- t = @{animated=true}
+
+}
+
 ;;=====================================================================================================
 ;;TEMPLATES DE SLIDES
 
@@ -310,12 +394,12 @@ func M.FrontCover (t) {
         sfc = FNT1::renderUtf8(t.titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
-;;;
+
     val sub = tex where {
         sfc = FNT1::renderUtf8(t.subtitlestr,"blended", 0x0000FF, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
-;;;
+
     val autor = tex where {
         sfc = FNT2::renderUtf8(t.autorstr,"blended", 0x000000, 0x000000)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
@@ -336,10 +420,10 @@ func M.FrontCover (t) {
 
         set tw, th = FNT1::sizeText(t.titlestr)
         REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
-;;;
+
         set tw, th = FNT2::sizeText(t.subtitlestr)
         REN::copy(sub,nil,@{x=(1500/2)-((tw/2)-->F),y=250,w=tw,h=th})
-;;;
+
         set tw, th = FNT2::sizeText(t.autorstr)
         REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
 
@@ -361,7 +445,7 @@ func M.Slide_Title_OneObject(t){
                 await(false)
             }
             t.tag1 == 2 => {
-                spawn M.Image@{path = t.object1, pos = M.fs.C, scale = 0.5}
+                spawn M.Image@{path = t.object1, pos = M.fs.C, scale = M.sizes.image.large}
                 await(false)
             }
             t.tag1 == 3 => {
@@ -385,7 +469,7 @@ func M.Slide_Title_TwoObjects(t){
                 await(false)
             }
             t.tag1 == 2 => {
-                spawn M.Image@{path = t.object1, pos = M.fs.O, scale = 0.5}
+                spawn M.Image@{path = t.object1, pos = M.fs.O, scale = M.sizes.image.medium}
                 await(false)
             }
             t.tag1 == 3 => {
@@ -402,7 +486,7 @@ func M.Slide_Title_TwoObjects(t){
                 await(false)
             }
             t.tag2 == 2 => {
-                spawn M.Image@{path = t.object2, pos = M.fs.L, scale = 0.05}
+                spawn M.Image@{path = t.object2, pos = M.fs.L, scale = M.sizes.image.medium}
                 await(false)
             }
             t.tag2 == 3 => {
@@ -457,11 +541,5 @@ func M.Show(s){
         }
     }
 }
-
-func M.new_image_size(t){
-
-}
-t.w 
-t.h
 
 M

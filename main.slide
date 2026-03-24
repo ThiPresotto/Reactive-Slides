@@ -1,0 +1,81 @@
+@{
+    ;;1==========
+    @{
+        template = "FrontCover",
+        bgcolor = "white",
+        titlestr = "Quine Program",
+        subtitlestr = " ",
+        autorstr = "Thiago Presotto Moreira",
+        unistr = "Universidade do Estado do Rio de Janeiro",
+        datestr = "20/10/1984",
+    },
+    ;;2==========
+    @{
+        template = "Slide_Title_OneObject",
+        bgcolor = "white",
+        object1 = @{"Caracteristicas Necessarias",
+    "Sem programas vazios/sem byte",
+    "Sem usar leitura de arquivos para ler a si mesmo",
+    "A saída precisa ser idêntica ao código fonte."},
+        tag1 = "bullet",
+    }
+    ;;3==========
+    @{
+        template = "Slide_Title_OneObject",
+        bgcolor = "white",
+        object1 = ```[[#include <studio.h>
+int main(){
+char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}
+printf(s,10,34,s,34);return 0;}]]```,
+        tag1 = "text",
+    } 
+
+    ;;4==========
+    @{
+        template = "Slide_Title_OneObject",
+        bgcolor = "white",
+        title = "O que esperar?",
+        object1 = ```[[Marrocos se encontra na África setentrional e é
+banhado pelo oceano atlântico e mar mediterrâneo,
+Marrocos possui 446 550 de área. Como Hassan II
+disse “Marrocos é como uma árvore com raízes da
+África, mas cujas folhas respiram o ar Europeu’’. Por
+esse motivo existe uma variedade linguística entre
+árabe, berbere(povo nômade), francês e grande parte
+fala espanhol com facilidade e faz fronteira com três
+países(Argélia, Mauritânia e Espanha).
+]]```,
+    tag1 = "text"
+    },
+    ;;5==========
+    @{
+        template = "Slide_Title_OneObject",
+        bgcolor = "white",
+        title = "Imagem de C",
+        object1 = "C_logo.png",
+        tag1 = "image",
+    },
+    ;;6==========
+    @{
+        template = "Slide_Title_TwoObjects",
+        bgcolor = "white",
+        object1 = ```[[Testando os limites de tabela
+quanto que esse texto pode ser escrito
+sem invadir a área ao lado ou a área de transição,
+futuramente pretendo fazer uma função que calcule o tamanho
+estimado para que não invada.
+]]```,
+        tag1 = "text",
+        object2 = "dot.png",
+        tag2 = "image",
+    },
+    ;;7==========
+    @{
+        template = "Slide_Title_TwoObjects",
+        bgcolor = "white",
+        object1 = @{"Anos dos títulos","1974","1989","1997","2001"},
+        tag1 = "bullet",
+        object2 = @{"Anos dos titulos","1970","1984","2010","2012"},
+        tag2 = "bullet",
+    },
+}

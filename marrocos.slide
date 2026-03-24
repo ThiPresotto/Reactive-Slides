@@ -1,0 +1,102 @@
+@{
+    ;;1===============
+    @{
+        template = "FrontCover",
+        bgcolor = "yellow",
+        titlestr = "MARROCOS", 
+        subtitlestr = " ",
+        autorstr = "Thiago Presotto",
+        unistr = "Colegio ", 
+        datestr = "??/??/2015",
+    },
+    ;;2===============
+    @{
+        template = "Slide_Title_OneObject,
+        bgcolor = "red",
+        title = "LINHA DO TEMPO",
+        object1 = @{"Os berbéres chegaram a Marrocos há cerca de 3000 anos atrás",
+"Em 685 dC. os exércitos árabes invadem o Norte de África introduzindo o Islão e o árabe",
+"Em 711 os muçulmanos marroquinos invadem o território Ibérico",
+"Em 788 berbéres e árabes unificam-se para um estado marroquino independente",
+"Em meados do século 11, os Almorávidas conquistam Marrocos construindo assim um império muçulmano",
+"Em 1912 Marrocos é inserido como protectorado francês e espanhol em algumas partes do território",
+"Abd al-Krim começou a revolta contra a presença europeia em território marroquino nos anos 1921 até 1926",
+"Em 1956 Marrocos ganha independência total do território excepto nas cidades autónomas de Ceuta e Melilla",
+"Em 1957 Marrocos tornou-se numa monarquia constitucional",
+"Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores"},
+    tag1 = "bullet"
+    },
+    ;;3===============
+    @{
+        template = "Slide_Title_OneObject,
+        bgcolor = "red",
+        title = "GEOGRAFIA DO MARROCOS",
+        object1 = ```[[
+Marrocos se encontra na África setentrional e é
+banhado pelo oceano atlântico e mar mediterrâneo,
+Marrocos possui 446 550 de área. Como Hassan II
+disse “Marrocos é como uma árvore com raízes da
+África, mas cujas folhas respiram o ar Europeu’’. Por
+esse motivo existe uma variedade linguística entre
+árabe, berbere(povo nômade), francês e grande parte
+fala espanhol com facilidade e faz fronteira com três
+países(Argélia, Mauritânia e Espanha).
+]]```,
+    tag1 = "text"
+    },
+    ;;4===============
+    @{
+        template = "Slide_Title_OneObject,
+        bgcolor = "red",
+        title = "RELIGIÃO"
+        object1 = ```[[
+Em Marrocos estima-se que 98% são
+islãs(muçulmano) e o resto são católicos e
+judeus, segundo o alcorão, livro da religião
+muçulmana, o único deus é Allah e seu profeta
+é Maomé. Diferente de outros países, o governo 
+não proibiu outras religiões e não permite
+propagandas que convertam alguém à outra
+religião, porém o governo considera as
+mesquitas lugares sagrados em que apenas
+islamitas podem entrar.
+]]```,
+    tag1 = "text"
+    },
+    ;;5===============
+    @{},
+    ;;6===============
+    @{
+        template = "Slide_Title_OneObject,
+        bgcolor = "red",
+        title = "CULTURA MARROQUINA"
+        object1 = ```[[
+Marrocos possui diversas características em sua 
+cultura. Temos a dança do ventre eu é a típica em 
+Marrocos, a djellaba, roupa de lá, a pulseira 
+marroquina que é junta ao anel, eles tem o costume de 
+decorar as salas com cortinas no teto, parede(tudo). 
+Em Marrocos é comum ver mulheres trabalhando em 
+centros urbanos, a verdade é que a cultura africana e 
+muçulmana é vincada só que com grande interferência 
+europeia.
+]]```,
+    tag1 = "text"
+    },
+    ;;7===============
+    @{
+        template = "Slide_Title_OneObject,
+        bgcolor = "red",
+        title = "CULINARIA MARROQUINA"
+        object1 = ```[[
+Os marroquinos se limitam em comidas 
+com tomate, carne, pimenta, etc. Como 
+eles não podem comer carne de porco, já 
+que o alcorão proíbe, a carne que 
+consumida é a de carneiro. Outro 
+hábito comum em Marrocos é comer com as 
+mãos.
+]]```,
+    tag1 = "text"
+    },
+}

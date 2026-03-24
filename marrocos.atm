@@ -8,32 +8,32 @@ defer{
 func Slide1(){
     spawn S.BackgroundColor(S.colors.yellow)
     spawn S.FrontCover @{titlestr = "MARROCOS", 
+                        subtitlestr = " ",
                         autorstr = "Thiago Presotto",
                         unistr = "Colegio ", 
                         datestr = "??/??/2015",}
-    spawn S.Image @{pos = S.fs.O,path = "MARROCOS/marrocos_flag.jpg",scale = 1.5}
-    spawn S.Image @{pos = S.fs.L,path = "MARROCOS/map.png",scale = 0.5}
+    spawn S.Image @{pos = S.fs.O,path = "MARROCOS/marrocos_flag.jpg",scale = S.sizes.image.medium}
+    spawn S.Image @{pos = S.fs.L,path = "MARROCOS/map.png",scale = S.sizes.image.medium}
     await(false)
 }
 
 func Slide2(){
     spawn S.BackgroundColor(S.colors.red)
-    spawn S.Title @{title = "LINHA DO TEMPO",title_clr = S.colors.black}
-    spawn S.BulletList @{ string = ```[[
-Os berbéres chegaram a Marrocos há cerca de 3000 anos atrás
-Em 685 dC. os exércitos árabes invadem o Norte de África introduzindo o Islão e o árabe
-Em 711 os muçulmanos marroquinos invadem o território Ibérico
-Em 788 berbéres e árabes unificam-se para um estado marroquino independente
-Em meados do século 11, os Almorávidas conquistam Marrocos construindo assim um império muçulmano
-Em 1912 Marrocos é inserido como protectorado francês e espanhol em algumas partes do território
-Abd al-Krim começou a revolta contra a presença europeia em território marroquino nos anos 1921 até 1926
-Em 1956 Marrocos ganha independência total do território excepto nas cidades autónomas de Ceuta e Melilla
-Em 1957 Marrocos tornou-se numa monarquia constitucional
-Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores
-]]```, 
-    anim = false}
+    spawn S.Slide_Title_OneObject @{
+        title = "LINHA DO TEMPO",
+        object1 = @{"Os berbéres chegaram a Marrocos há cerca de 3000 anos atrás",
+"Em 685 dC. os exércitos árabes invadem o Norte de África introduzindo o Islão e o árabe",
+"Em 711 os muçulmanos marroquinos invadem o território Ibérico",
+"Em 788 berbéres e árabes unificam-se para um estado marroquino independente",
+"Em meados do século 11, os Almorávidas conquistam Marrocos construindo assim um império muçulmano",
+"Em 1912 Marrocos é inserido como protectorado francês e espanhol em algumas partes do território",
+"Abd al-Krim começou a revolta contra a presença europeia em território marroquino nos anos 1921 até 1926",
+"Em 1956 Marrocos ganha independência total do território excepto nas cidades autónomas de Ceuta e Melilla",
+"Em 1957 Marrocos tornou-se numa monarquia constitucional",
+"Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores",},
+    tag1 = S.content.bullet
+    }
     await(false)
-
 }
 
 func Slide3(){
@@ -75,7 +75,7 @@ islamitas podem entrar.
 
 func Slide5(){
     spawn S.BackgroundColor(S.colors.black)
-    spawn S.Image @{pos = S.fs.NO,path = "MARROCOS/marrocos_flag.jpg",scale = 2.5}
+    spawn S.Image @{pos = S.fs.NO,path = "MARROCOS/marrocos_flag.jpg",scale = S.sizes.image.large}
     spawn S.Text @{string = ```[[
 Na bandeira de Marrocos o vermelho
 simboliza a descendência da família real do 
@@ -127,9 +127,9 @@ muçulmana é vincada só que com grande interferência
 europeia.
 ]]```,
                 font_size = 45, str_clr = S.colors.yellow,x_start = 80, y_start = 160}
-    spawn S.Image @{pos = S.fs.S,path = "MARROCOS/cultura1.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/cultura2.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/cultura3.jpg",scale = 0.8}
+    spawn S.Image @{pos = S.fs.S,path = "MARROCOS/cultura1.jpg",scale = S.sizes.image.small}
+    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/cultura2.jpg",scale = S.sizes.image.small}
+    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/cultura3.jpg",scale = S.sizes.image.small}
     await (false)
 }
 
@@ -146,9 +146,9 @@ mãos.
 ]]```,
                 font_size = 45, str_clr = S.colors.yellow,x_start = 80, y_start = 250}
     spawn S.Title @{title = "CULINARIA MARROQUINA",title_clr = S.colors.black}
-        spawn S.Image @{pos = S.fs.S,path = "MARROCOS/comida1.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/comida2.jpg",scale = 0.7}
-    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/comida3.jpg",scale = 0.8}
+        spawn S.Image @{pos = S.fs.S,path = "MARROCOS/comida1.jpg",scale = S.sizes.image.small}
+    spawn S.Image @{pos = S.fs.SO,path = "MARROCOS/comida2.jpg",scale = S.sizes.image.small}
+    spawn S.Image @{pos = S.fs.SL,path = "MARROCOS/comida3.jpg",scale = S.sizes.image.small}
     await(false)
 }
 

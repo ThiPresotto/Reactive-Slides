@@ -1,3 +1,4 @@
+
 val S = require "slides"
 
 S.open("Apresentação",1500,1000)
@@ -7,8 +8,8 @@ defer{
 
 func Slide1(){
     spawn S.BackgroundColor(S.colors.white)
-    spawn S.FrontCover @{titlestr = "Quine Program", autorstr = "Thiago Presotto Moreira",unistr = "Universidade do Estado do Rio de Janeiro", datestr = "20/10/1984","quine.png"}
-    spawn S.Image @{pos = S.fs.C,path = "quine.png",scale = 1.5}
+    spawn S.FrontCover @{titlestr = "Quine Program", subtitlestr = "A program that outputs itself", autorstr = "Thiago Presotto Moreira",unistr = "Universidade do Estado do Rio de Janeiro", datestr = "20/10/1984","quine.png"}
+    spawn S.Image @{pos = S.fs.C,path = "quine.png",scale = S.sizes.image.medium}
     await(false)
 }
 
@@ -20,7 +21,7 @@ func Slide2(){
     "Sem usar leitura de arquivos para ler a si mesmo",
     "A saída precisa ser idêntica ao código fonte."},
     tag1 = S.content.bullet}
-    spawn S.Image @{pos = S.fs.L, path= "C_logo.png",scale = 0.5}
+    spawn S.Image @{pos = S.fs.L, path= "C_logo.png",scale = S.sizes.image.medium}
     await(false)
 
 }
@@ -85,4 +86,3 @@ func Slide7() {
 
 val slide_set = @{Slide1,Slide2,Slide3,Slide4,Slide5,Slide6,Slide7}
 await S.Show (slide_set)
-
