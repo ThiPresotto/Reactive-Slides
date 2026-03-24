@@ -99,7 +99,6 @@ set M.content = @{
     text = 1,
     image = 2,
     bullet = 3,
-    titled_bullet = 4,
 }
 
 set M.lt = @{
@@ -312,75 +311,6 @@ func M.BulletList (t) {
 
 
     ;;-- t = @{animated=true}
-}
-
-func M.TitleBulletList (t) {
-
-    val dot_img = tex where {
-        sfc = IMG.load("dot.png") --> assert
-        tex = REN::createTextureFromSurface(sfc) --> assert
-    }
-
-    val FNTT = TTF.open("DejaVuSans.ttf",50)--> assert
-    val FNT = TTF.open("DejaVuSans.ttf",30)--> assert
-
-    var tex = @{}
-    loop _,v in t.items{
-        set tex[+] = texture where {
-            sfc = FNT:: renderUtf8(v,"blended",0x000000,0x000000)-->assert
-            texture = REN::createTextureFromSurface(sfc)-->assert
-        }
-    }
-
-    set tex[1] = texture where {
-        sfc = FNTT:: renderUtf8(t.items[1],"blended",0x000000,0x000000)-->assert
-        texture = REN::createTextureFromSurface(sfc)-->assert
-        }
-
-    var n=#tex
-
-    par {
-        if (t.anim){
-            set n = 1
-            loop{
-                val _,key = await(SDL.event.KeyDown)
-                match key.name {
-                    :Up => {
-                        if n > 1 {
-                            set n = n - 1
-                        }
-                    }
-                    :Down => {
-                        if n < #tex {
-                            set n = n + 1
-                        }
-
-                    }
-                }
-            }
-        }
-    } with {
-        every :sdl,draw {
-            var bullet_height = t.y_start
-            set tw, th = FNTT::sizeText(t.items[1])
-            REN::copy(tex[1],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
-        }
-    } with {
-        val bullet_x = t.x_start - 60
-        every :sdl,draw {
-            var bullet_height = t.y_start
-            loop i in (n-1) {
-                REN::copy(dot_img,nil,@{x=bullet_x,y=bullet_height,w=30,h=30})
-                set tw, th = FNT::sizeText(t.items[i+1])
-                REN::copy(tex[i+1],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
-                set bullet_height = bullet_height + 100
-            }
-        }
-    }
-
-
-    ;;-- t = @{animated=true}
-
 }
 
 ;;=====================================================================================================
