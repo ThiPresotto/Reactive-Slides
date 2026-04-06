@@ -1,0 +1,489 @@
+;;Refletir sobre argumentos em Image. Pos pode ser
+;;uma tabela {x,y} ou um valor chave "L" ao mesmo tempo
+
+val M = @{}
+set M.height = 0
+set M.width = 0
+
+set SDL = require "SDL"
+set IMG = require "SDL.image"
+set TTF = require "SDL.ttf"
+set MIX = require "SDL.mixer"
+
+set sdl = require "atmos.env.sdl"
+
+val F = math.floor
+
+func M.open(win_name,win_width,win_height){
+    SDL.init(SDL.flags.video) -->assert
+    TTF.init() -->assert
+    IMG.init() -->assert 
+    MIX.init() -->assert
+
+    ;;set M.height = win_height
+    ;;set M.width = win_width
+
+    set WIN = SDL.createWindow @{
+        title = win_name,
+        height = win_height,
+        width = win_width,
+        flags = @{ SDL.flags.OpenGL
+        }
+    } --> assert
+
+
+    set REN = SDL.createRenderer(WIN, -1) --> assert
+    set sdl.ren = REN
+}
+
+
+
+;;MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
+
+func M.close(){
+    SDL.quit()
+    TTF.quit()
+    IMG.quit()
+    MIX.quit()
+}
+
+func M.new_image_size(t){
+    var new = @{w = nil, h = nil}
+    ifs{
+        t.w <= t.h => {
+            set new.w = t.ratio
+            set new.h = ((t.h/t.w)*new.w)-->F
+        }
+        t.h < t.w => {
+            set new.h = t.ratio
+            set new.w = ((t.w/t.h)*new.h)-->F
+        }
+    }
+    new
+}
+
+;;=====================================================================================================
+;;TABELAS
+
+set M.colors = @{
+    black = 0x000000,
+    white = 0xFFFFFF,
+    red = 0xFF0000,
+    green = 0x00FF00,
+    blue = 0x0000FF,
+    yellow = 0xFFFF00,
+    cyan = 0x00FFFF,
+    magenta = 0xFF00FF
+}
+
+set M.sizes = @{
+    text = @{
+        tiny = 15,
+        small = 25,      
+        medium = 30,
+        normal = 45, 
+        large = 60,   
+        giant = 80,
+        },
+    image = @{
+        tiny = 100,
+        small = 150,
+        medium = 300,
+        large = 500,
+        giant = 750,
+    }
+}
+
+set M.lt = @{
+    OL = 1,
+    UL = 2,
+}
+
+
+set M.fs = @{
+    C = \(length) {
+        @{
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    L = \(length) {
+        @{
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    O = \(length) {
+        @{
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=(1000/2)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    N = \(length) {
+        @{
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    S = \(length) {
+        @{
+            x=(1500/2)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    SL = \(length) {
+        @{
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    SO = \(length) {
+        @{
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=((1000/2)+250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    NO = \(length) {
+        @{
+            x=((1500/2)-375)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+    NL = \(length) {
+        @{
+            x=((1500/2)+375)-(((length.w)/2)-->F),
+            y=((1000/2)-250)-(((length.h)/2)-->F),
+            w=(length.w)-->F,
+            h=(length.h)-->F,
+        }
+    },
+}
+
+;;=====================================================================================================
+;;ELEMENTOS BASE
+
+func M.BackgroundColor(clr_value){
+    val color = clr_value || 0xFFFFFF
+    every :sdl.draw{
+        REN::setDrawColor(color)
+        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
+    }
+}
+
+func M.Title(t) {
+   
+    val color = t.title_clr || 0x000000
+    val FNT = TTF.open("DejaVuSans.ttf",50) --> assert
+
+    val title_texture = tex where {
+        sfc = FNT::renderUtf8(t.title,"blended", color, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    every :sdl.draw{
+        set tw, th = FNT::sizeText(t.title)
+        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
+    }
+}
+
+;;Adicionar parametro de escala. Corrigir tabela fs
+func M.Image(t){
+    val scale = t.scale || 1
+    val slide_image = tex where { 
+        sfc = IMG.load(t.path) -->assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val _,_,img_w,img_h = slide_image::query()
+    val new = M.new_image_size @{w = img_w,h=img_h,ratio = scale}
+    every :sdl.draw{
+        REN::copy(slide_image,nil, t.pos(new))
+    }
+}
+
+func M.Text(t){
+    
+    val color = t.str_clr
+    val FNT = TTF.open("DejaVuSans.ttf",t.font_size)--> assert
+
+    val skip = FNT::lineSkip()
+
+    val lines = @{}
+    loop line in t.string::gmatch("([^\r\n]+)"){
+        table.insert(lines,line)
+    }
+
+    val tex = @{}
+    loop _,v in lines {
+        set tex[+] = texture where {
+            sfc = FNT::renderUtf8(v,"blended", color, 0x000000)-->assert
+            texture = REN::createTextureFromSurface(sfc)-->assert
+        }
+    }
+
+    every :sdl,draw {
+        ;;REN::setDrawColor(0xFFFFFF)
+        ;;REN::fillRect(@{x=80,y=300,w=1365,h=140}) ;;Decifrar tamanho de w
+        var height = t.y_start
+        loop i in #lines {
+            set tw, th = FNT::sizeText(lines[i])
+            REN::copy(tex[i],nil,@{x=t.x_start,y=height,w=tw,h=th})
+            set height = height + skip
+        }
+    }
+}
+
+
+
+func M.BulletList (t) {
+
+    val dot_img = tex where {
+        sfc = IMG.load("dot.png") --> assert
+        tex = REN::createTextureFromSurface(sfc) --> assert
+    }
+
+    val FNT = TTF.open("DejaVuSans.ttf",30)--> assert
+
+    val tex = @{}
+    loop i,v in t.items{
+        if type(i) == "number" {
+            set tex[+] = texture where {
+                sfc = FNT:: renderUtf8(v,"blended",0x000000,0x000000)-->assert
+                texture = REN::createTextureFromSurface(sfc)-->assert
+            }   
+        }
+    }
+    var n=#tex
+
+    par {
+        if (t.anim){
+            set n = 0
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Up => {
+                        if n > 0 {
+                            set n = n - 1
+                        }
+                    }
+                    :Down => {
+                        if n < #tex {
+                            set n = n + 1
+                        }
+
+                    }
+                }
+            }
+        }
+    } with {
+        val bullet_x = t.x_start - 60
+        every :sdl,draw {
+            var bullet_height = t.y_start
+            loop i in n {
+                REN::copy(dot_img,nil,@{x=bullet_x,y=bullet_height,w=30,h=30})
+                set tw, th = FNT::sizeText(t.items[i])
+                REN::copy(tex[i],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
+                set bullet_height = bullet_height + 100
+            }
+        }
+    }
+
+
+    ;;-- t = @{animated=true}
+}
+
+;;=====================================================================================================
+;;TEMPLATES DE SLIDES
+
+func M.FrontCover (t) {
+    val FNT1 = TTF.open("DejaVuSans.ttf",40) --> assert
+    val FNT2 = TTF.open("DejaVuSans.ttf",30) --> assert
+    
+    val title = tex where {
+        sfc = FNT1::renderUtf8(t.titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val sub = tex where {
+        sfc = FNT1::renderUtf8(t.subtitlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val autor = tex where {
+        sfc = FNT2::renderUtf8(t.autorstr,"blended", 0x000000, 0x000000)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val uni = tex where {
+        sfc = FNT2::renderUtf8(t.unistr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+    val date = tex where {
+        sfc = FNT2::renderUtf8(t.datestr,"blended", 0x000000, 0x0000FF)-->assert
+        tex = REN::createTextureFromSurface(sfc)-->assert
+    }
+
+
+    every :sdl.draw{
+
+        set tw, th = FNT1::sizeText(t.titlestr)
+        REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.subtitlestr)
+        REN::copy(sub,nil,@{x=(1500/2)-((tw/2)-->F),y=250,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.autorstr)
+        REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.unistr)
+        REN::copy(uni,nil,@{x=(1500/2)-((tw/2)-->F),y=695,w=tw,h=th})
+
+        set tw, th = FNT2::sizeText(t.datestr)
+        REN::copy(date,nil,@{x=(1500/2)-((tw/2)-->F),y=740,w=tw,h=th})
+    }
+}
+
+func M.Slide_Title_OneObject(t){
+    
+    val args = match t[1].tag {
+        :Text => {
+            @{string = t[1][1],
+            font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 160}
+        }
+        :Image => {
+            @{path = t[1][1], pos = M.fs.C, scale = M.sizes.image.large}
+        }
+        :BulletList => {
+            @{items = t[1], anim = true,
+            y_start=300,x_start=80}
+        }
+    }
+    spawn M[t[1].tag](args)
+    M.Title @{title = t.title, title_clr = 0x00FFFF}
+}
+
+func M.Slide_Title_TwoObjects(t){
+
+    par_or{
+
+        val argsl = match t[1].tag {
+            :Text => {
+                @{string = t[1][1],
+                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 160}
+            }
+            :Image => {
+                @{path = t[1][1], pos = M.fs.C, scale = M.sizes.image.large}
+            }
+            :BulletList => {
+                @{items = t[1], anim = false,
+                y_start=300,x_start=80}
+            }
+        }
+        val argsr = match t[2].tag {
+            :Text => {
+                @{string = t[2][1],
+                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 715}
+            }
+            :Image => {
+                @{path = t[2][1], pos = M.fs.L, scale = M.sizes.image.medium}
+            }
+            :BulletList => {
+                @{items = t[2], anim = false,
+                y_start=300,x_start=835}
+            }
+        }
+        spawn M[t[1].tag](argsl)
+        spawn M[t[2].tag](argsr)
+
+        M.Title @{title = t.title, title_clr = 0x00FFFF}
+
+    }with{
+        every :sdl.draw{
+            REN::setDrawColor(0xFF0000)
+            REN::fillRect@{x=695,y=0,w=80,h=1000}
+        }
+    }
+}
+
+
+;;=====================================================================================================
+
+func M.getBGColor(color){
+    val return_value = M.colors[color] || 0XFFFFFF
+    ;;return_value
+}
+
+func M.renderTemplate(t){
+    match t.template {
+            :FrontCover => {
+                M[t.template](t)
+            }
+            :Slide_Title_OneObject => {
+                M[t.template](t)
+            }
+            :Slide_Title_TwoObjects => {
+                M[t.template](t)
+            }
+        }
+}
+
+func M.CreateFrame(t){
+    val bgcolor = M.getBGColor(t.bgcolor)
+    ;;val template = getTemplate(t.template)
+
+    spawn M.BackgroundColor(bgcolor)
+    spawn M.renderTemplate(t)
+    await(false)
+}
+
+func M.Show(p){
+    var cur = 1
+    val frames = #p
+    do :Repetition{
+        loop{
+            spawn M.CreateFrame(p[cur])  
+            loop{
+                val _,key = await(SDL.event.KeyDown)
+                match key.name {
+                    :Left => {
+                        if cur > 1 {
+                            set cur = cur - 1
+                            break()
+                            ;;trans::playChannel(2,-1,1500)
+                        }
+                    }
+                    :Right => {
+                        if cur < frames {
+                            set cur = cur + 1
+                            break()
+                            ;;trans::playChannel(2,-1,1500)
+                        }
+                    }
+                    :Return =>{
+                        escape(:Repetition)
+                    }
+                }
+                
+            }
+        }
+    }
+}
+
+M

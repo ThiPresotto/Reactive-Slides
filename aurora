@@ -1,0 +1,12 @@
+val S = require "slides1"
+
+val filename = arg[2]
+val presentation = dofile(filename)
+
+S.open("Apresentação",1500,1000)
+defer{
+    S.close()
+}
+
+await S.Show(presentation)
+
