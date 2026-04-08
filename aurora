@@ -1,5 +1,92 @@
 val S = require "slides1"
 
+func validatePresentation(p){
+    if (type(p) != "table") {
+        print("Root must be a table")    
+    }
+
+    loop idx, slide in p {
+        validateSlide(slide,idx)
+    }
+
+}
+
+func validateSlide(slide,idx){
+    if (type(slide) != "table"){
+        print("Slide "++idx++" must be a table")
+    }
+
+    if !slide.template{
+        print("Missing <template> field on slide "++idx)
+    }
+
+    
+        val valid_templates = @{
+            FrontCover = true,
+            Slide_Title_OneObject = true,
+            Slide_Title_TwoObjects = true,
+        }
+
+        if !valid_templates[slide.template]{
+            print("Invalid slide template in slide "++idx)
+        }
+    
+
+    match slide.template {
+        :FrontCover => {
+            validateFrontCover(slide,idx)
+        }
+        :Slide_Title_OneObject => {
+            validateSlideTitleOneObject(slide,idx)
+        }
+        :Slide_Title_TwoObjects => {
+            validateSlideTitleTwoObjects(slide,idx)
+        }
+    }
+}
+
+func validateFrontCover(slide,idx){
+
+}
+
+func validateSlideTitleOneObject(slide,idx){
+    
+}
+
+func validateSlideTitleTwoObjects(slide,idx){
+
+}
+;;;
+func validateObject(obj,slide_idx){
+    
+    if !obj.tag {
+        print("content object missing the tag field")
+    }
+    
+    val valid_tags = @{
+        Text = true,
+        Image = true,
+        BulletList = true,
+    }
+
+    if !valid_tags[obj.tag]
+;;
+    match obj.tag {
+        :Text => {
+            
+        }
+        :Image => {
+            
+        }
+        :BulletList => {
+            
+        }
+    }
+;;
+
+}
+;;;
+
 val filename = arg[2]
 val presentation = dofile(filename)
 
@@ -7,6 +94,8 @@ S.open("Apresentação",1500,1000)
 defer{
     S.close()
 }
+
+validatePresentation(presentation)
 
 await S.Show(presentation)
 

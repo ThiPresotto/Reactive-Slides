@@ -80,7 +80,6 @@ set M.sizes = @{
     text = @{
         tiny = 15,
         small = 25,      
-        medium = 30,
         normal = 45, 
         large = 60,   
         giant = 80,
@@ -88,17 +87,11 @@ set M.sizes = @{
     image = @{
         tiny = 100,
         small = 150,
-        medium = 300,
+        normal = 300,
         large = 500,
         giant = 750,
     }
 }
-
-set M.lt = @{
-    OL = 1,
-    UL = 2,
-}
-
 
 set M.fs = @{
     C = \(length) {
@@ -179,7 +172,7 @@ set M.fs = @{
 ;;ELEMENTOS BASE
 
 func M.BackgroundColor(clr_value){
-    val color = clr_value || 0xFFFFFF
+    val color = clr_value
     every :sdl.draw{
         REN::setDrawColor(color)
         REN::fillRect(@{x=0,y=0,w=1500,h=1000})
@@ -204,7 +197,7 @@ func M.Title(t) {
 
 ;;Adicionar parametro de escala. Corrigir tabela fs
 func M.Image(t){
-    val scale = t.scale || 1
+    val scale = t.image_scale || 1
     val slide_image = tex where { 
         sfc = IMG.load(t.path) -->assert
         tex = REN::createTextureFromSurface(sfc) --> assert
@@ -212,15 +205,18 @@ func M.Image(t){
 
     val _,_,img_w,img_h = slide_image::query()
     val new = M.new_image_size @{w = img_w,h=img_h,ratio = scale}
+    var anchor = t.image_pos(new)
+    set anchor.x = anchor.x + (t.image_xshift)
+    set anchor.y = anchor.y + (t.image_yshift)
     every :sdl.draw{
-        REN::copy(slide_image,nil, t.pos(new))
+        REN::copy(slide_image,nil, anchor)
     }
 }
 
 func M.Text(t){
     
-    val color = t.str_clr
-    val FNT = TTF.open("DejaVuSans.ttf",t.font_size)--> assert
+    val color = t.text_clr
+    val FNT = TTF.open("DejaVuSans.ttf",t.text_size)--> assert
 
     val skip = FNT::lineSkip()
 
@@ -240,10 +236,10 @@ func M.Text(t){
     every :sdl,draw {
         ;;REN::setDrawColor(0xFFFFFF)
         ;;REN::fillRect(@{x=80,y=300,w=1365,h=140}) ;;Decifrar tamanho de w
-        var height = t.y_start
+        var height = t.text_ystart
         loop i in #lines {
             set tw, th = FNT::sizeText(lines[i])
-            REN::copy(tex[i],nil,@{x=t.x_start,y=height,w=tw,h=th})
+            REN::copy(tex[i],nil,@{x=t.text_xstart,y=height,w=tw,h=th})
             set height = height + skip
         }
     }
@@ -292,13 +288,13 @@ func M.BulletList (t) {
             }
         }
     } with {
-        val bullet_x = t.x_start - 60
+        val bullet_x = t.bullet_xstart - 60
         every :sdl,draw {
-            var bullet_height = t.y_start
+            var bullet_height = t.bullet_ystart
             loop i in n {
                 REN::copy(dot_img,nil,@{x=bullet_x,y=bullet_height,w=30,h=30})
                 set tw, th = FNT::sizeText(t.items[i])
-                REN::copy(tex[i],nil,@{x=t.x_start,y=bullet_height,w=tw,h=th})
+                REN::copy(tex[i],nil,@{x=t.bullet_xstart,y=bullet_height,w=tw,h=th})
                 set bullet_height = bullet_height + 100
             }
         }
@@ -312,50 +308,53 @@ func M.BulletList (t) {
 ;;TEMPLATES DE SLIDES
 
 func M.FrontCover (t) {
-    val FNT1 = TTF.open("DejaVuSans.ttf",40) --> assert
-    val FNT2 = TTF.open("DejaVuSans.ttf",30) --> assert
+    val FNTtit = TTF.open("DejaVuSans.ttf",40) --> assert
+    val FNTsub = TTF.open("DejaVuSans.ttf",30) --> assert
+    val FNTaut = TTF.open("DejaVuSans.ttf",30) --> assert
+    val FNTuni = TTF.open("DejaVuSans.ttf",30) --> assert
+    val FNTdat = TTF.open("DejaVuSans.ttf",30) --> assert
     
     val title = tex where {
-        sfc = FNT1::renderUtf8(t.titlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        sfc = FNTtit::renderUtf8(t.titlestr || " ","blended",M.colors[t.titleclr] || t.titleclr || 0x0000FF, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
     val sub = tex where {
-        sfc = FNT1::renderUtf8(t.subtitlestr,"blended", 0x0000FF, 0x0000FF)-->assert
+        sfc = FNTtit::renderUtf8(t.subtitlestr || " ","blended",M.colors[t.subtitleclr]|| t.subtitleclr || 0x0000FF, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
     val autor = tex where {
-        sfc = FNT2::renderUtf8(t.autorstr,"blended", 0x000000, 0x000000)-->assert
+        sfc = FNTaut::renderUtf8(t.autorstr || " ","blended",M.colors[t.autorclr] || t.autorclr || 0x000000, 0x000000)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
     val uni = tex where {
-        sfc = FNT2::renderUtf8(t.unistr,"blended", 0x000000, 0x0000FF)-->assert
+        sfc = FNTaut::renderUtf8(t.unistr || " ","blended",M.colors[t.uniclr]|| t.uniclr || 0x000000, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
     val date = tex where {
-        sfc = FNT2::renderUtf8(t.datestr,"blended", 0x000000, 0x0000FF)-->assert
+        sfc = FNTaut::renderUtf8(t.datestr || " ","blended",M.colors[t.dateclr] || t.dateclr || 0x000000, 0x0000FF)-->assert
         tex = REN::createTextureFromSurface(sfc)-->assert
     }
 
 
     every :sdl.draw{
 
-        set tw, th = FNT1::sizeText(t.titlestr)
+        set tw, th = FNTtit::sizeText(t.titlestr || " ")
         REN::copy(title,nil,@{x=(1500/2)-((tw/2)-->F),y=200,w=tw,h=th})
 
-        set tw, th = FNT2::sizeText(t.subtitlestr)
+        set tw, th = FNTtit::sizeText(t.subtitlestr || " ")
         REN::copy(sub,nil,@{x=(1500/2)-((tw/2)-->F),y=250,w=tw,h=th})
 
-        set tw, th = FNT2::sizeText(t.autorstr)
+        set tw, th = FNTaut::sizeText(t.autorstr || " ")
         REN::copy(autor,nil,@{x=(1500/2)-((tw/2)-->F),y=650,w=tw,h=th})
 
-        set tw, th = FNT2::sizeText(t.unistr)
+        set tw, th = FNTaut::sizeText(t.unistr || " ")
         REN::copy(uni,nil,@{x=(1500/2)-((tw/2)-->F),y=695,w=tw,h=th})
 
-        set tw, th = FNT2::sizeText(t.datestr)
+        set tw, th = FNTaut::sizeText(t.datestr || " ")
         REN::copy(date,nil,@{x=(1500/2)-((tw/2)-->F),y=740,w=tw,h=th})
     }
 }
@@ -364,15 +363,27 @@ func M.Slide_Title_OneObject(t){
     
     val args = match t[1].tag {
         :Text => {
-            @{string = t[1][1],
-            font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 160}
+            set t[1].text_clr = M.colors[t[1].text_clr] || t[1].text_clr || 0x000000
+            set t[1].text_size = M.sizes.text[t[1].text_size] || t[1].text_size || M.sizes.text.normal
+            set t[1].text_xstart = t[1].text_xstart || 80
+            set t[1].text_ystart = t[1].text_ystart || 160
+            set t[1].string = t[1][1]
+            t[1]
         }
         :Image => {
-            @{path = t[1][1], pos = M.fs.C, scale = M.sizes.image.large}
+            set t[1].path = t[1][1]
+            set t[1].image_pos = M.fs[t[1][image_pos]] || M.fs.C
+            set t[1].image_scale = M.sizes.image[t[1][image_scale]] || t[1].image_scale || M.sizes.image.large
+            set t[1].image_xshift = t[1].image_xshift || 0
+            set t[1].image_yshift = t[1].image_yshift || 0
+            t[1]
         }
         :BulletList => {
-            @{items = t[1], anim = true,
-            y_start=300,x_start=80}
+            set t[1].items = t[1]
+            set t[1].anim = t[1].anim || true
+            set t[1].bullet_xstart = t[1].bullet_xstart || 80
+            set t[1].bullet_ystart = t[1].bullet_ystart || 300
+            t[1]
         }
     }
     spawn M[t[1].tag](args)
@@ -385,28 +396,52 @@ func M.Slide_Title_TwoObjects(t){
 
         val argsl = match t[1].tag {
             :Text => {
-                @{string = t[1][1],
-                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 160}
+                set t[1].text_clr = M.colors[t[1].text_clr] || t[1].text_clr || 0x000000
+                set t[1].text_size = M.sizes.text[t[1].text_size] || t[1].text_size || M.sizes.text.normal
+                set t[1].text_xstart = t[1].text_xstart || 80
+                set t[1].text_ystart = t[1].text_ystart || 160
+                set t[1].string = t[1][1]
+                t[1]
             }
             :Image => {
-                @{path = t[1][1], pos = M.fs.C, scale = M.sizes.image.large}
+                set t[1].path = t[1][1]
+                set t[1].image_pos = M.fs[t[1][image_pos]] || M.fs.O
+                set t[1].image_scale = M.sizes.image[t[1][image_scale]] || t[1].image_scale || M.sizes.image.medium
+                set t[1].image_xshift = t[1].image_xshift || 0
+                set t[1].image_yshift = t[1].image_yshift || 0
+                t[1]
             }
             :BulletList => {
-                @{items = t[1], anim = false,
-                y_start=300,x_start=80}
+                set t[1].items = t[1]
+                set t[1].anim = t[1].anim || true
+                set t[1].bullet_xstart = t[1].bullet_xstart || 80
+                set t[1].bullet_ystart = t[1].bullet_ystart || 300
+                t[1]
             }
         }
         val argsr = match t[2].tag {
             :Text => {
-                @{string = t[2][1],
-                font_size = M.sizes.text.normal, str_clr = M.colors.yellow,x_start = 80, y_start = 715}
+                set t[2].text_clr = M.colors[t[2].text_clr] || t[2].text_clr || 0x000000
+                set t[2].text_size = t[2].text_size || M.sizes.text.normal
+                set t[2].text_xstart = t[2].text_xstart || 80
+                set t[2].text_ystart = t[2].text_ystart || 715
+                set t[2].string = t[2][1]
+                t[2]
             }
             :Image => {
-                @{path = t[2][1], pos = M.fs.L, scale = M.sizes.image.medium}
+                set t[2].path = t[2][1]
+                set t[2].image_pos = M.fs[t[1][image_pos]] || M.fs.L
+                set t[2].image_scale = M.sizes.image[t[1][image_scale]] || t[1].image_scale || M.sizes.image.medium
+                set t[2].image_xshift = t[1].image_xshift || 0
+                set t[2].image_yshift = t[1].image_yshift || 0
+                t[2]
             }
             :BulletList => {
-                @{items = t[2], anim = false,
-                y_start=300,x_start=835}
+                set t[2].items = t[2]
+                set t[2].anim = t[2].anim || true
+                set t[2].bullet_xstart = t[2].bullet_xstart || 835
+                set t[2].bullet_ystart = t[2].bullet_ystart || 300
+                t[2]
             }
         }
         spawn M[t[1].tag](argsl)
@@ -427,21 +462,21 @@ func M.Slide_Title_TwoObjects(t){
 
 func M.getBGColor(color){
     val return_value = M.colors[color] || 0XFFFFFF
-    ;;return_value
+    return_value
 }
 
 func M.renderTemplate(t){
     match t.template {
-            :FrontCover => {
-                M[t.template](t)
-            }
-            :Slide_Title_OneObject => {
-                M[t.template](t)
-            }
-            :Slide_Title_TwoObjects => {
-                M[t.template](t)
-            }
+        :FrontCover => {
+            M[t.template](t)
         }
+        :Slide_Title_OneObject => {
+            M[t.template](t)
+        }
+        :Slide_Title_TwoObjects => {
+            M[t.template](t)
+        }
+    }
 }
 
 func M.CreateFrame(t){

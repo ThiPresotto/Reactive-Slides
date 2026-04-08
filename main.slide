@@ -4,7 +4,7 @@ return {
         template = "FrontCover",
         bgcolor = "white",
         titlestr = "Quine Program",
-        subtitlestr = " ",
+        subtitlestr = "output same as input",
         autorstr = "Peterson Marry",
         unistr = "Universidade do Estado do Rio de Janeiro",
         datestr = "20/10/1984",
@@ -32,7 +32,7 @@ return {
             [[#include <studio.h>
 int main(){
 char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}
-printf(s,10,34,s,34);return 0;}]]
+printf(s,10,34,s,34);return 0;}]],
         } 
     },
     --4==========
@@ -61,7 +61,7 @@ países(Argélia, Mauritânia e Espanha).
         title = "Imagem de C",
         {
             tag = "Image",
-            "C_logo.png"
+            "C_logo.png",
         }
     },
     --6==========
