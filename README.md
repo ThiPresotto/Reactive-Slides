@@ -126,11 +126,11 @@ Objeto utilizado para exibir blocos de texto. O conteúdo deve ser inserido no p
 
 `text_xstart`-> Altera a posição inicial do texto no eixo x, deve ser um decimal positivo.
 
-`text_ystart`-> Altera a posição inicial do texto no eixo y, deve ser um deciaml positivo.
+`text_ystart`-> Altera a posição inicial do texto no eixo y, deve ser um decimal positivo.
 
 ### Image
 
-Objeto utilizado para inserir imagens. No primeiro campo anônimo da tabela, o path da imagem deve ser inserido. A engine alica posicionamente padrão conforme o template, mas os seguintes campos opcionais permitem pesonalização:
+Objeto utilizado para inserir imagens. No primeiro campo anônimo da tabela, o path da imagem deve ser inserido. A engine aplica posicionamente padrão conforme o template, mas os seguintes campos opcionais permitem personalização:
 
 `image_pos` -> Altera o ponto de âncora do centro da imagem. Deve ser um valor da tabela "fs".
 
@@ -142,11 +142,11 @@ Objeto utilizado para inserir imagens. No primeiro campo anônimo da tabela, o p
 
 ### BulletList
 
-Objeto utilizado para inserir informações como uma lista não ordenada. Cada campo anônimo da tabela desse objeto é uma string que será adicionada a um tópico. A engine alica posicionamente padrão conforme o template, mas os seguintes campos opcionais permitem pesonalização:
+Objeto utilizado para inserir informações como uma lista não ordenada. Cada campo anônimo da tabela desse objeto é uma string que será adicionada a um tópico. A engine aplica posicionamente padrão conforme o template, mas os seguintes campos opcionais permitem personalização:
 
 `bullet_xstart`-> Altera a posição inicial do texto no eixo x, deve ser um decimal positivo.
 
-`bullet_ystart`-> Altera a posição inicial do texto no eixo y, deve ser um deciaml positivo.
+`bullet_ystart`-> Altera a posição inicial do texto no eixo y, deve ser um decimal positivo.
 
 ## Tabelas
 
