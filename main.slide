@@ -1,21 +1,22 @@
 return {
     --1==========
     {
-        template = "FrontCover",
-        bgcolor = "white",
-        titlestr = "Quine Program",
-        subtitlestr = "output same as input",
-        autorstr = "Peterson Marry",
-        unistr = "Universidade do Estado do Rio de Janeiro",
-        datestr = "20/10/1984",
+        template = 'Cover',
+        title    = "Quine Program",
+        subtitle = "output same as input",
+        author   = "Peterson Marry",
+        inst     = "Universidade do Estado do Rio de Janeiro",
+        date     = "20/10/1984",
+        color = {
+            fg = 'blue',
+        }
     },
     --2==========
     {
-        template = "Slide_Title_OneObject",
-        bgcolor = "white",
+        template = 'One',
         title = "Caracteristicas Necessarias",
         {
-            tag = "BulletList",
+            tag = 'List',
             "Caracteristicas Necessarias",
             "Sem programas vazios/sem byte",
             "Sem usar leitura de arquivos para ler a si mesmo",

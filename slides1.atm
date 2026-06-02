@@ -5,47 +5,7 @@ val M = @{}
 set M.height = 0
 set M.width = 0
 
-set SDL = require "SDL"
-set IMG = require "SDL.image"
-set TTF = require "SDL.ttf"
-set MIX = require "SDL.mixer"
-
-set sdl = require "atmos.env.sdl"
-
 val F = math.floor
-
-func M.open(win_name,win_width,win_height){
-    SDL.init(SDL.flags.video) -->assert
-    TTF.init() -->assert
-    IMG.init() -->assert 
-    MIX.init() -->assert
-
-    ;;set M.height = win_height
-    ;;set M.width = win_width
-
-    set WIN = SDL.createWindow @{
-        title = win_name,
-        height = win_height,
-        width = win_width,
-        flags = @{ SDL.flags.OpenGL
-        }
-    } --> assert
-
-
-    set REN = SDL.createRenderer(WIN, -1) --> assert
-    set sdl.ren = REN
-}
-
-
-
-;;MIX.openAudio(44100, SDL.audioFormat.S16, 2, 1024) --> assert
-
-func M.close(){
-    SDL.quit()
-    TTF.quit()
-    IMG.quit()
-    MIX.quit()
-}
 
 func M.new_image_size(t){
     var new = @{w = nil, h = nil}
@@ -170,30 +130,6 @@ set M.fs = @{
 
 ;;=====================================================================================================
 ;;ELEMENTOS BASE
-
-func M.BackgroundColor(clr_value){
-    val color = clr_value
-    every :sdl.draw{
-        REN::setDrawColor(color)
-        REN::fillRect(@{x=0,y=0,w=1500,h=1000})
-    }
-}
-
-func M.Title(t) {
-   
-    val color = t.title_clr || 0x000000
-    val FNT = TTF.open("DejaVuSans.ttf",50) --> assert
-
-    val title_texture = tex where {
-        sfc = FNT::renderUtf8(t.title,"blended", color, 0x000000)-->assert
-        tex = REN::createTextureFromSurface(sfc)-->assert
-    }
-
-    every :sdl.draw{
-        set tw, th = FNT::sizeText(t.title)
-        REN::copy(title_texture,nil,@{x=(1500/2)-((tw)/2)-->F,y=50,w=tw,h=th})
-    }
-}
 
 ;;Adicionar parametro de escala. Corrigir tabela fs
 func M.Image(t){
@@ -465,26 +401,12 @@ func M.getBGColor(color){
     return_value
 }
 
-func M.renderTemplate(t){
-    match t.template {
-        :FrontCover => {
-            M[t.template](t)
-        }
-        :Slide_Title_OneObject => {
-            M[t.template](t)
-        }
-        :Slide_Title_TwoObjects => {
-            M[t.template](t)
-        }
-    }
-}
-
 func M.CreateFrame(t){
     val bgcolor = M.getBGColor(t.bgcolor)
     ;;val template = getTemplate(t.template)
 
     spawn M.BackgroundColor(bgcolor)
-    spawn M.renderTemplate(t)
+    M[t.template](t)
     await(false)
 }
 
