@@ -1,4 +1,4 @@
-val S = require "slides1"
+val S = require "slides"
 
 func validatePresentation(p){
     if (type(p) != "table") {

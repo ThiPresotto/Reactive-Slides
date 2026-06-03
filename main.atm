@@ -1,5 +1,5 @@
 
-val S = require "slides"
+val S = require "slides0"
 
 S.open("Apresentação",1500,1000)
 defer{
