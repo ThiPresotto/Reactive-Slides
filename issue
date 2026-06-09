@@ -1,0 +1,10 @@
+val text = "Texto com\nvárias linhas"
+
+val lines = @{}
+loop line in text::gmatch("([^\r\n]+)"){
+    table.insert(line,lines)
+}
+
+loop l in lines {
+   print(l)
+}

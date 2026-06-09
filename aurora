@@ -71,9 +71,21 @@ func ITS.Text (t) {
 }
 
 func ITS.Image (t) {
-   every :draw {
+   val img = pico.get.image("C_logo.png") 
+   var dh, dw
+   if img.w >= img.h {
+      set dw = 0.5
+      val f = 0.5/img.w
+      set dh = img.h * f 
+   }
+   else {
+      set dh = 0.5
+      val f = 0.5/img.h
+      set dw = img.w * f
+   }
+every :draw {
       pico.output.draw.image(t[1], @{
-          '%', x=0.5,y=0.5,w=0.4,h=0.5
+		  '%', x=0.5,y=0.5,w=dw,h=dh
       })
       pico.output.draw.rect @{'%',x=0,y=0,w=1.0,h=0.08,anchor='NW'}
    }
@@ -117,6 +129,24 @@ print(one.tag)
         }
         pico.output.draw.text(t.title || "", @{
             '%', x=0.5, y=0.1, h=0.075
+        })
+    }
+}
+
+func TPL.Many (t) { 
+    if (#t < 2) {
+       val one = t[1]
+       spawn ITS[one.tag](one)
+    }
+    else {
+        print("implementar mais de um template") 
+    }
+    every :draw {
+        pico.zet.pencil @{
+           color = (t.color && t.color.fg) || color.fg
+        }
+        pico.output.draw.text(t.title || "", @{
+           '%',x=0.5,y=0.1,h=0.075
         })
     }
 }

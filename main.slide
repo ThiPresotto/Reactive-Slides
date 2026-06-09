@@ -61,13 +61,12 @@ países(Argélia, Mauritânia e Espanha).
         title = "Imagem de C",
         {
             tag = "Image",
-            "C_logo.png",
+            "quine.png",
         }
     },
     --6==========
     {
-        template = "Slide_Title_TwoObjects",
-        bgcolor = "white",
+        template = 'Many', 
         title = " ",
         {
             tag = "Text",
@@ -85,8 +84,7 @@ estimado para que não invada.
     },
     --7==========
     {
-        template = "Slide_Title_TwoObjects",
-        bgcolor = "white",
+        template = 'Many', 
         title = "boba",
         {
             tag = "BulletList",
