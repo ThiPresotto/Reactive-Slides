@@ -1,6 +1,12 @@
 require "atmos.env.pico"
 val pico = require "pico"
 
+func tic(){
+   every :draw{ 
+     print("5")
+   }
+}
+
 val color = @{
     bg = 'white',
     fg = 'black',
@@ -12,21 +18,20 @@ pico.zet.pencil @{
     font = "DejaVuSans.ttf"
 }
 
-pico.layer.empty(nil,"hello",false,@{'!',w=600,h=600,})
-pico.zet.layer("hello")
-pico.zet.pencil @{color = "red"}
-pico.zet.pencil @{
-    font = "DejaVuSans.ttf"
-} 
-pico.output.draw.text("hello",@{'%',x=0.5,y=0.5,h=0.5,w=0.5})
-pico.zet.layer("world")
+pin x = if 10 < 20{
+        spawn tic()
+    }
+    else {
+        print("hello")
+    }
+print(x,"1")
 
 loop {
      pico.zet.effect @{
         color = (color && color.bg) || color.bg
-    }
-
+    } 
     par {
+       print(x,"2") 
        loop {
           val _,e = await :key.dn
            match e.key {
@@ -35,10 +40,6 @@ loop {
                }
             }
          }
-        }with{
-           every :draw {
-              pico.output.draw.layer("hello",@{'%',x=0.5,y=0.5,h=0.5,w=0.5,anchor='W'})
-           }
-        }
+     }
 }
 

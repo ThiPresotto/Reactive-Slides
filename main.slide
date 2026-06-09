@@ -66,7 +66,7 @@ países(Argélia, Mauritânia e Espanha).
     },
     --6==========
     {
-        template = 'Many', 
+        template = 'Two', 
         title = " ",
         {
             tag = "Text",
@@ -78,29 +78,27 @@ estimado para que não invada.
 ]]
         },
         {
-            tag = "Image",
-            "dot.png"
+           tag = "Image",
+           "quine.png",
         }
     },
     --7==========
     {
-        template = 'Many', 
+        template = 'Two', 
         title = "boba",
         {
-            tag = "BulletList",
-            "Anos dos títulos",
+            tag = "List",
+            "Anos dos titulos",
             "1974",
             "1989",
             "1997",
             "2001"
         },
         {
-            tag = "BulletList",
-            "Anos dos titulos",
-            "1970",
-            "1984",
-            "2010",
-            "2012"
+            tag = "Text",
+            [[Ao lado vemos os titulos do
+clube carioca no campeonato
+brasileiro]]
         }
     },
 

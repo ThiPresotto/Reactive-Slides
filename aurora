@@ -17,11 +17,6 @@ val T = dofile(filename)
  
 val ITS = @{}
 func ITS.List (t) {
-    pico.layer.empty(nil,"dot",false,@{'!',w=100,h=100})
-    pico.zet.layer("dot") 
-    pico.zet.pencil @{color = "black"}
-    pico.output.draw.oval @{'%',x=0.5,y=0.5,w=1,h=1}
-    pico.zet.layer("world")
     var n = #t
     par{
        if (t.anim){
@@ -48,9 +43,7 @@ func ITS.List (t) {
                pico.output.draw.text(t[i], @{
                    '%', x=0.1, y=0.15+(i*0.075), h=0.05, anchor=:W
                })
-               pico.output.draw.layer("dot",@{
-                   '%', x=0.05,y=0.15+(i*0.075), h=0.02, w=0.02, anchor=:W
-               })
+               pico.output.draw.oval @{'%',x=0.05,y=0.15+(i*0.075),h=0.02,w=0.02,anchor=:W}
            } 
        }
     }
@@ -87,7 +80,6 @@ every :draw {
       pico.output.draw.image(t[1], @{
 		  '%', x=0.5,y=0.5,w=dw,h=dh
       })
-      pico.output.draw.rect @{'%',x=0,y=0,w=1.0,h=0.08,anchor='NW'}
    }
 }
 
@@ -133,14 +125,7 @@ print(one.tag)
     }
 }
 
-func TPL.Many (t) { 
-    if (#t < 2) {
-       val one = t[1]
-       spawn ITS[one.tag](one)
-    }
-    else {
-        print("implementar mais de um template") 
-    }
+func TPL.Two(t) { 
     every :draw {
         pico.zet.pencil @{
            color = (t.color && t.color.fg) || color.fg
@@ -148,6 +133,12 @@ func TPL.Many (t) {
         pico.output.draw.text(t.title || "", @{
            '%',x=0.5,y=0.1,h=0.075
         })
+        pico.zet.pencil @{
+           color = "red"
+        }
+        pico.output.draw.rect @{
+           '%',x=0.5,y=0,h=1,w=0.05,anchor = :N
+        }
     }
 }
 
