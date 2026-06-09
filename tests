@@ -1,0 +1,44 @@
+require "atmos.env.pico"
+val pico = require "pico"
+
+val color = @{
+    bg = 'white',
+    fg = 'black',
+}
+
+pico.zet.window @{ title="Apresentação" }
+pico.zet.dim @{'!', w=800, h=600}
+pico.zet.pencil @{
+    font = "DejaVuSans.ttf"
+}
+
+pico.layer.empty(nil,"hello",false,@{'!',w=600,h=600,})
+pico.zet.layer("hello")
+pico.zet.pencil @{color = "red"}
+pico.zet.pencil @{
+    font = "DejaVuSans.ttf"
+} 
+pico.output.draw.text("hello",@{'%',x=0.5,y=0.5,h=0.5,w=0.5})
+pico.zet.layer("world")
+
+loop {
+     pico.zet.effect @{
+        color = (color && color.bg) || color.bg
+    }
+
+    par {
+       loop {
+          val _,e = await :key.dn
+           match e.key {
+              :Escape => {
+                 return()
+               }
+            }
+         }
+        }with{
+           every :draw {
+              pico.output.draw.layer("hello",@{'%',x=0.5,y=0.5,h=0.5,w=0.5,anchor='W'})
+           }
+        }
+}
+

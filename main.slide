@@ -17,6 +17,7 @@ return {
         title = "Caracteristicas Necessarias",
         {
             tag = 'List',
+            anim = true,
             "Caracteristicas Necessarias",
             "Sem programas vazios/sem byte",
             "Sem usar leitura de arquivos para ler a si mesmo",
