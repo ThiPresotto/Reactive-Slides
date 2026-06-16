@@ -1,12 +1,6 @@
 require "atmos.env.pico"
 val pico = require "pico"
 
-func tic(){
-   every :draw{ 
-     print("5")
-   }
-}
-
 val color = @{
     bg = 'white',
     fg = 'black',
@@ -17,29 +11,90 @@ pico.zet.dim @{'!', w=800, h=600}
 pico.zet.pencil @{
     font = "DejaVuSans.ttf"
 }
+pico.layer.empty(nil,"hi"++1,false,@{'!',w=500,h=500})
+pico.zet.layer("hi"++1)
+pico.zet.pencil @{color = "red"}
+pico.zet.pencil @{font = "DejaVuSans.ttf"}
+pico.output.draw.text("hello",@{'%',x=0.5,y=0.5,h=0.5})
+pico.zet.layer("world")
 
-pin x = if 10 < 20{
-        spawn tic()
-    }
-    else {
-        print("hello")
-    }
 print(x,"1")
 
 loop {
      pico.zet.effect @{
         color = (color && color.bg) || color.bg
     } 
-    par {
-       print(x,"2") 
-       loop {
-          val _,e = await :key.dn
-           match e.key {
-              :Escape => {
-                 return()
-               }
-            }
-         }
-     }
+    every :draw{
+        pico.output.draw.layer("hi1",@{'%',x=0.33,y=0.33,w=0.2})
+    }
 }
 
+
+
+func ITS.List (t) {
+    var n = #t
+    var currentLayer = nil
+    
+    -- Function to create/update the text layer
+    func updateTextLayer() {
+        -- Remove old layer if exists
+        if currentLayer ~= nil {
+            pico.layer.remove(currentLayer)
+        }
+        
+        -- Create new layer
+        pico.layer.empty(nil,"textlist"++lay,false,@{'!',w=800,h=800})
+        pico.zet.layer("textlist"++lay)
+        set currentLayer = lay
+        set lay = lay+1
+        
+        -- Draw all items with selection indicator
+        loop i in #t {
+            pico.output.draw.text(t[i], @{
+                '%', x=0.1, y=0.15+(i*0.075), h=0.05, anchor=:W
+            })
+            
+            -- Draw selection oval only for current selection
+            if i == n {
+                pico.output.draw.oval(@{
+                    '%', x=0.05, y=0.15+(i*0.075), h=0.02, w=0.02, anchor=:W
+                })
+            }
+        }
+        
+        pico.zet.layer("world")
+    }
+    
+    par{
+       if (t.anim){
+          updateTextLayer() -- Initial draw
+          
+          loop{
+             val _,e = await :key.dn
+             match e.key{
+                :Up => {
+                   if n > 0{
+                      set n = n-1
+                      updateTextLayer() -- Redraw with new selection
+                   }
+                }
+                :Down =>{
+                   if n < #t {
+                      set n = n+1
+                      updateTextLayer() -- Redraw with new selection
+                   }
+                }
+             }
+          }
+       }
+    }with{
+       every :draw {
+           -- Just render the current text layer
+           if currentLayer ~= nil {
+               pico.output.draw.layer("textlist"++currentLayer,@{
+                   '%', x=0, y=0, anchor=:NW
+               })
+           }
+       }
+    }
+}

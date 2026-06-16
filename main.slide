@@ -16,7 +16,7 @@ return {
         template = 'One',
         title = "Caracteristicas Necessarias",
         {
-            tag = 'List',
+            tag = 'ListL',
             anim = true,
             "Caracteristicas Necessarias",
             "Sem programas vazios/sem byte",
@@ -27,10 +27,9 @@ return {
     --3==========
    {
         template = 'One',
-        bgcolor = "white",
         title = "Código em C",
         {
-            tag = "Text",
+            tag = "TextL",
             [[#include <studio.h>
 int main(){
 char*s=#include <studio.h>%cint main(){char*s=%c%s%c;printf(s,10,34,s,34);return 0;}
@@ -42,16 +41,9 @@ printf(s,10,34,s,34);return 0;}]],
         template = 'One',
         title = "O que esperar?",
         {
-            tag = "Text",
+            tag = "TextL",
             [[Marrocos se encontra na África setentrional e é
 banhado pelo oceano atlântico e mar mediterrâneo,
-Marrocos possui 446 550 de área. Como Hassan II
-disse “Marrocos é como uma árvore com raízes da
-África, mas cujas folhas respiram o ar Europeu’’. Por
-esse motivo existe uma variedade linguística entre
-árabe, berbere(povo nômade), francês e grande parte
-fala espanhol com facilidade e faz fronteira com três
-países(Argélia, Mauritânia e Espanha).
 ]]
         }
     },
@@ -60,7 +52,7 @@ países(Argélia, Mauritânia e Espanha).
         template = 'One', 
         title = "Imagem de C",
         {
-            tag = "Image",
+            tag = "ImageL",
             "quine.png",
         }
     },
@@ -68,8 +60,12 @@ países(Argélia, Mauritânia e Espanha).
     {
         template = 'Two', 
         title = " ",
+--        {
+--           tag = "Image",
+--           "quine.png",
+--        },
         {
-            tag = "Text",
+            tag = "TextL",
             [[Testando os limites de tabela
 quanto que esse texto pode ser escrito
 sem invadir a área ao lado ou a área de transição,
@@ -78,7 +74,7 @@ estimado para que não invada.
 ]]
         },
         {
-           tag = "Image",
+           tag = "ImageL",
            "quine.png",
         }
     },
@@ -87,7 +83,26 @@ estimado para que não invada.
         template = 'Two', 
         title = "boba",
         {
-            tag = "List",
+           tag = "ImageL",
+           "quine.png",
+        },
+        {
+            tag = "ListL",
+            anim = true,
+            "Anos dos titulos",
+            "1974",
+            "1989",
+            "1997",
+            "2001"
+        },
+    },
+    --8===========
+    {
+        template = 'Two',
+        title = "",
+        {
+            tag = "ListL",
+            anim = true,
             "Anos dos titulos",
             "1974",
             "1989",
@@ -95,11 +110,12 @@ estimado para que não invada.
             "2001"
         },
         {
-            tag = "Text",
+            tag = "TextL",
             [[Ao lado vemos os titulos do
 clube carioca no campeonato
 brasileiro]]
         }
     },
+
 
 }

@@ -57,12 +57,12 @@ func ITS.ListL (t) {
     } else {
        set n = #t
     }
-   var lisLay
+   var curLay
 
    func updateLayer(){
       pico.layer.empty(nil,"list"++lay,false,@{'!',w=800,h=600})
       pico.zet.layer("list"++lay)
-      set lisLay = lay
+      set curLay = lay
       set lay = lay+1
       pico.zet.pencil @{color = 0x000000}
       pico.zet.pencil @{font = "DejaVuSans.ttf"}
@@ -84,7 +84,7 @@ func ITS.ListL (t) {
           set xpos = 0
        }
        t.pos == :right => {
-          set xpos = 0.50
+          set xpos = 0.55
        }
     }
 
@@ -113,7 +113,8 @@ func ITS.ListL (t) {
    }with{
       val xtest = xpos
       every :draw {
-         pico.output.draw.layer("list"++lisLay,@{
+         print("list", curLay,lay)
+         pico.output.draw.layer("list"++curLay,@{
             '%',x=xtest,y=0,anchor=:NW
          })
       }
@@ -137,8 +138,8 @@ func ITS.Text (t) {
 func ITS.TextL (t) {
 
    pico.layer.empty(nil,"text"++lay,false,@{'!',w=800,h=600})
-   set texLay = lay
-   print("curlay", texLay)
+   set curLay = lay
+   print("curlay", curLay)
    print("lay", lay)
    pico.zet.layer("text"++lay)
    pico.zet.pencil @{font = "DejaVuSans.ttf"}
@@ -156,7 +157,7 @@ func ITS.TextL (t) {
    }
 
    pico.zet.layer("world")
-   print("text"++texLay)
+   print("text"++curLay)
 
    set xpos = 0
 
@@ -165,13 +166,15 @@ func ITS.TextL (t) {
          set xpos = 0
       }
       t.pos == :right => {
-         set xpos = 0.45
+         set xpos = 0.55
       }
    }
+print("text, curlay",curLay)
    every :draw {
-      pico.output.draw.layer("text"++texLay,@{
-          '%',x=xpos,y=0,anchor=:NW, 
-      })
+        print("text",curLay,lay)
+;;      pico.output.draw.layer("text"++curLay,@{
+;;          '%',x=xpos,y=0,anchor=:NW, 
+;;      })
    }
 }
 
@@ -198,8 +201,8 @@ every :draw {
 func ITS.ImageL (t) {
    pico.layer.empty(nil,"image"++lay,false,@{'!',w=800,h=600})
    pico.zet.layer("image"++lay)
-   set imaLay = lay
-   print("curlay",imaLay)
+   set curLay = lay
+   print("curlay",curLay)
    print("lay",lay)
    set lay = lay + 1
 
@@ -220,6 +223,8 @@ func ITS.ImageL (t) {
    })
    pico.zet.layer("world")
 
+   print("image"++curLay)  
+
    var xpos = 0.5
    var ypos = 0.5
    var width = dw
@@ -239,7 +244,8 @@ func ITS.ImageL (t) {
    }
 
    every :draw{
-      pico.output.draw.layer("image"++imaLay, @{
+      print("image", curLay,lay)
+      pico.output.draw.layer("image"++curLay, @{
           '%',x=xpos,y=ypos,w=width,h=height
       })
    }
