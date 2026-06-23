@@ -103,24 +103,41 @@ func ITS.ListL (t) {
    var lisLay
 
    func updateLayer(){
+
+;;Layer information
+;;==============================================================
       pico.layer.empty(nil,"list"++lay,false,@{'!',w=800,h=600})
       pico.zet.layer("list"++lay)
       set lisLay = lay
       set lay = lay+1
       pico.zet.pencil @{color = 0x000000}
       pico.zet.pencil @{font = "DejaVuSans.ttf"}
+;;==============================================================
 
+      val skip = t.skip || 0.075
+      
+      if (t.btitle) {
+         pico.output.draw.text(t.btitle,@{
+            '%',x=0.05,y=0.15 + skip,h=0.055, anchor=:W
+         })
+      }
+
+      val start_index = (t.btitle && 1) || 0
       loop i in n {
          pico.output.draw.text(t[i],@{
-            '%',x=0.1,y=0.15+(i*0.075),h=0.05,anchor=:W
+            '%',x=0.1,y=0.15+((i+start_index)*skip),h=0.05,anchor=:W
          })
-         pico.output.draw.oval @{'%',x=0.05,y=0.15+(i*0.075),h=0.02,w=0.02,anchor=:W}
+       }
+       if (((t.bullet == nil) && true) || t.bullet){
+          loop i in n{
+             pico.output.draw.oval @{'%',x=0.05,y=0.15+((i+start_index)*skip),h=0.02,w=0.02,anchor=:W}
+          }
        }
        pico.zet.layer("world")
     }
     updateLayer()
 
-    set xpos = 0
+    var xpos = 0
 
     ifs{
        t.pos == :left => {
@@ -155,9 +172,7 @@ func ITS.ListL (t) {
 
    }with{
       ;;val xtest = xpos
-      print("outside",xpos)
       every :draw {
-         print("loop",xpos)
          pico.output.draw.layer("list"++lisLay,@{
             '%',x=xpos,y=0,anchor=:NW
          })
@@ -182,7 +197,7 @@ func ITS.Text (t) {
 func ITS.TextL (t) {
 
    pico.layer.empty(nil,"text"++lay,false,@{'!',w=800,h=600})
-   set texLay = lay
+   var texLay = lay
    pico.zet.layer("text"++lay)
    pico.zet.pencil @{font = "DejaVuSans.ttf"}
    pico.zet.pencil @{color = 0x000000}
@@ -200,7 +215,7 @@ func ITS.TextL (t) {
 
    pico.zet.layer("world")
 
-   set xpos = 0
+   var xpos = 0
 
    ifs{
       t.pos == :left => {
@@ -240,7 +255,7 @@ every :draw {
 func ITS.ImageL (t) {
    pico.layer.empty(nil,"image"++lay,false,@{'!',w=800,h=600})
    pico.zet.layer("image"++lay)
-   set imaLay = lay
+   var imaLay = lay
    set lay = lay + 1
 
    val img = pico.get.image(t[1])
@@ -313,6 +328,19 @@ func TPL.Cover (t) {
     }
 }
 
+func TPL.Ref (t) {
+
+
+   every :draw{
+      pico.zet.pencil @{
+          color = (t.color && t.color.fg) || color.fg
+      }
+      pico.output.draw.text("REFERENCE",@{
+         '%',x=0.5, y=0.1,h=0.075
+      })
+   }
+}
+
 func TPL.One (t) {
     val one = t[1]
 print(one.tag)
@@ -344,9 +372,6 @@ func TPL.Two(t) {
         })
         pico.zet.pencil @{
            color = "black"
-        }
-        pico.output.draw.rect @{
-           '%',x=0.5,y=0,h=1,w=0.05,anchor = :N
         }
     }
 }

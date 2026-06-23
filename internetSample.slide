@@ -2,11 +2,11 @@ return {
 	--1============
 	{
 		template = 'Cover',
-		title    = "Title of your presentation",
-		subtitle = "Subtitle of your presentation",
-		author   = "Your name",
-		inst     = "Department of International Economic Relations",
-		date     = "May 14, 2026",
+		title    = "Title for a minimal beamer presentation",
+		subtitle = "",
+		author   = "Author One",
+		inst     = "Name of institution",
+		date     = "May 25, 2018",
 		color = {
 			fg = "black"
 		},
@@ -14,25 +14,80 @@ return {
 	--2============
 	{
 		template = 'One',
-		title    = "Contents",
+		title    = "Outline",
 		{
 			tag  = 'ListL',
 			anim = false,
-			"Motivation",
-			"Research gap & Aim of the paper",
-			"Theoretical background",
-			"Methodology",
-			"Results & Discussion",
-			"Further researcg & Limitations",
+                        bullet = false,
+			skip = 0.15,
+			"Section One",
+			"Section Two",
+			"References",
 		}
-	}
+	},
 	--3============
+        {
+                template = 'One',
+                title    = "Slide with bullet points",
+                {
+                        tag   = 'ListL',
+                        anim  = false,
+			btitle = "This is a bullet list of two points:",
+                        "Point one",
+                        "Point two",
+                }
+        },
 	--4============
+	{
+		template = 'Two',
+		title = "Slide with two columns",
+		{
+			tag = 'Text',
+			[[Text goes in first column.
+]]
+		},
+		{
+			tag = 'TextL',
+			[[Text goes in second column
+]]
+		}
+	},
 	--5============
 	--6============
+--TODO: AURORA IMPLEMENTAR CAPTION
+	{
+		template = 'One',
+		title = "Slide with figure",
+		{
+			tag = 'ImageL',
+			caption = "Figure 1: Caption for figure one.",
+			"C_logo.png",
+		}
+	},
 	--7============
+	{
+		template = 'One',
+		title    = "Slide with references",
+		{
+			tag = 'ListL',
+			anim = false,
+			bullet = false,
+			"This is to reference a figure (Figure 1)",
+			"This is to reference a table (Table 1)",
+			"This is to cite an article [Ahmed and Kim, 2018]",
+			"This is to add an article to the references without mentioning in the text",
+		}
+	},
 	--8============
-	--9============
-	--10===========
-	--11===========
+	{
+		template = 'Ref',
+		{
+			type = 'Article',
+			title = "pcr: An R package for quality assessment, analysis and testing of qPCR data.
+			author = {
+				"Ahmed, M",
+				"Kim, D",
+			},
+                }
+	}
 }
