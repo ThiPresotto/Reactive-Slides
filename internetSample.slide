@@ -1,0 +1,38 @@
+return {
+	--1============
+	{
+		template = 'Cover',
+		title    = "Title of your presentation",
+		subtitle = "Subtitle of your presentation",
+		author   = "Your name",
+		inst     = "Department of International Economic Relations",
+		date     = "May 14, 2026",
+		color = {
+			fg = "black"
+		},
+	},
+	--2============
+	{
+		template = 'One',
+		title    = "Contents",
+		{
+			tag  = 'ListL',
+			anim = false,
+			"Motivation",
+			"Research gap & Aim of the paper",
+			"Theoretical background",
+			"Methodology",
+			"Results & Discussion",
+			"Further researcg & Limitations",
+		}
+	}
+	--3============
+	--4============
+	--5============
+	--6============
+	--7============
+	--8============
+	--9============
+	--10===========
+	--11===========
+}

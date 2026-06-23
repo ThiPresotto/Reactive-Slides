@@ -116,6 +116,15 @@ clube carioca no campeonato
 brasileiro]]
         }
     },
-
-
+    --9===========
+    {
+       template = 'One',
+        title = "Match outcomes",
+        {
+            tag = "Queue",
+            "victory",
+            "draw",
+            "defeat",
+        },
+    }
 }

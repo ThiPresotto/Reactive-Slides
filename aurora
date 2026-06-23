@@ -50,6 +50,49 @@ func ITS.List (t) {
     }
 }
 
+func ITS.Queue (t) {
+   
+   val list = @{}   
+   
+   par{
+      loop{
+         val _,e = await :key.dn
+         match e.key{
+            :Q => {
+               loop {
+               val _,e = await :key.dn
+;; TODO: CONVERTER PARA QUALQUER NÚMERO
+;; TODO: NAO PERMITIR ARGUMENTO REPETIDO
+;;
+                  match e.key {
+                     :1 =>{
+                        set list[#list+1] = t[1]
+                     }
+                     :2 =>{
+                        set list[#list+1] = t[2]
+                     }
+                     :3 =>{
+                        set list[#list+1] = t[3]
+                     }
+                     :Q =>{
+                        break()
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }with{
+      every :draw{
+         loop i in #list{
+            pico.output.draw.text(list[i],@{
+               '%', x=0.1, y=0.15+(i*0.075),h=0.05,anchor=:W
+            })
+         }
+      }
+   }
+}
+
 func ITS.ListL (t) {
 
    if t.anim {
@@ -111,10 +154,12 @@ func ITS.ListL (t) {
       }
 
    }with{
-      val xtest = xpos
+      ;;val xtest = xpos
+      print("outside",xpos)
       every :draw {
+         print("loop",xpos)
          pico.output.draw.layer("list"++lisLay,@{
-            '%',x=xtest,y=0,anchor=:NW
+            '%',x=xpos,y=0,anchor=:NW
          })
       }
    }
@@ -138,8 +183,6 @@ func ITS.TextL (t) {
 
    pico.layer.empty(nil,"text"++lay,false,@{'!',w=800,h=600})
    set texLay = lay
-   print("curlay", texLay)
-   print("lay", lay)
    pico.zet.layer("text"++lay)
    pico.zet.pencil @{font = "DejaVuSans.ttf"}
    pico.zet.pencil @{color = 0x000000}
@@ -151,12 +194,11 @@ func ITS.TextL (t) {
    }
    loop i in #lines{
       pico.output.draw.text(lines[i],@{
-          '%', x=0.1,y=0.15+(i*0.075),h=0.05, anchor=:W
+          '%', x=0.05,y=0.15+(i*0.075),h=0.05, anchor=:W
       })
    }
 
    pico.zet.layer("world")
-   print("text"++texLay)
 
    set xpos = 0
 
@@ -165,7 +207,7 @@ func ITS.TextL (t) {
          set xpos = 0
       }
       t.pos == :right => {
-         set xpos = 0.45
+         set xpos = 0.50
       }
    }
    every :draw {
@@ -199,8 +241,6 @@ func ITS.ImageL (t) {
    pico.layer.empty(nil,"image"++lay,false,@{'!',w=800,h=600})
    pico.zet.layer("image"++lay)
    set imaLay = lay
-   print("curlay",imaLay)
-   print("lay",lay)
    set lay = lay + 1
 
    val img = pico.get.image(t[1])
