@@ -17,7 +17,8 @@ val T = dofile(filename)
 var lay = 1 
 
 val ITS = []
-task ITS.List (t) {
+
+set ITS.List = task (t) {
     var n = #t
     par{
        if (t.anim){
@@ -50,7 +51,7 @@ task ITS.List (t) {
     }
 }
 
-task ITS.Queue (t) {
+set ITS.Queue = task (t) {
    
    val list = []   
    
@@ -93,7 +94,7 @@ task ITS.Queue (t) {
    }
 }
 
-task ITS.ListL (t) {
+set ITS.ListL = task (t) {
 
    if t.anim {
        set n = 0
