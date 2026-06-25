@@ -24,7 +24,7 @@ set ITS.List = task (t) {
        if (t.anim){
           set n = 0
           loop{
-             val _,e = await :key.dn
+             val e = await :key.dn
              match e.key{
                 :Up => {
                    if n > 0{
@@ -57,11 +57,11 @@ set ITS.Queue = task (t) {
    
    par{
       loop{
-         val _,e = await :key.dn
+         val e = await :key.dn
          match e.key{
             :Q => {
                loop {
-               val _,e = await :key.dn
+               val e = await :key.dn
 ;;-> TODO: CONVERTER PARA QUALQUER NÚMERO
 ;;-> TODO: NAO PERMITIR ARGUMENTO REPETIDO
 
@@ -153,7 +153,7 @@ set ITS.ListL = task (t) {
     par{
       if (t.anim){
          loop{
-            val  _,e = await :key.dn
+            val  e = await :key.dn
             match e.key{
                :Up => {
                   if n > 0 {
@@ -180,13 +180,13 @@ set ITS.ListL = task (t) {
    }
 }
 
-task ITS.Text (t) {
+set ITS.Text = task (t) {
    val lines = []
    loop line in t@1::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
    }
    loop on :draw {
-      loop i,v in #lines {
+      loop i,v in lines {
             pico.output.draw.text(v, [
                 '%', x=0.1, y=0.15+(i*0.075), h=0.05, anchor=:W
             ])
@@ -207,7 +207,7 @@ set ITS.TextL = task (t) {
    loop line in t@1::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
    }
-   loop i,v in #lines {
+   loop i,v in lines {
       pico.output.draw.text(v,[
           '%', x=0.05,y=0.15+(i*0.075),h=0.05, anchor=:W
       ])
@@ -233,7 +233,7 @@ set ITS.TextL = task (t) {
 }
 
 set ITS.Image = task (t) {
-   val img = pico.get.image(t[1]) 
+   val img = pico.get.image(t@1) 
    var dh, dw
    if img.w >= img.h {
       set dw = 0.5
@@ -246,7 +246,7 @@ set ITS.Image = task (t) {
       set dw = img.w * f
    }
    loop on :draw {
-      pico.output.draw.image(t[1], [
+      pico.output.draw.image(t@1, [
          '%', x=0.5,y=0.5,w=dw,h=dh
       ])
    }
@@ -258,7 +258,7 @@ set ITS.ImageL = task (t) {
    var imaLay = lay
    set lay = lay + 1
 
-   val img = pico.get.image(t[1])
+   val img = pico.get.image(t@1)
    var dh,dw
    if img.w >= img.h {
       set dw = 0.5
@@ -270,7 +270,7 @@ set ITS.ImageL = task (t) {
       val f = 0.5/img.h
       set dw = img.w * f
    }
-   pico.output.draw.image(t[1],[
+   pico.output.draw.image(t@1,[
       '%',x=0.5,y=0.5,w=1,h=1
    ])
    pico.set.layer("world")
@@ -350,7 +350,7 @@ set TPL.Ref = task (t) {
    par{
       loop{
          par{
-            val _,e = await :key.dn
+            val e = await :key.dn
             match e.key {
                :Up =>{
                   if (cur_ref <= 1) => break()
@@ -362,7 +362,7 @@ set TPL.Ref = task (t) {
                }
             }
          }with{
-            spawn drawRef(t[cur_ref])
+            spawn drawRef(t@cur_ref)
             await(false)
          }
       }
@@ -379,9 +379,9 @@ set TPL.Ref = task (t) {
 }
 
 set TPL.One = task (t) {
-    val one = t[1]
+    val one = t@1
 print(one.tag)
-    spawn ITS[one.tag](one)
+    spawn ITS@(one.tag)(one)
     loop on :draw {
         pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
@@ -393,12 +393,12 @@ print(one.tag)
 }
 
 set TPL.Two = task (t) { 
-    val one = t[1]
-    val two = t[2]
+    val one = t@1
+    val two = t@2
     set one.pos = "left"
     set two.pos = "right"
-    spawn ITS[one.tag](one)
-    spawn ITS[two.tag](two)
+    spawn ITS@(one.tag)(one)
+    spawn ITS@(two.tag)(two)
 
     loop on :draw {
         pico.set.pencil [
@@ -422,7 +422,7 @@ loop {
     ]
     spawn TPL@(t.template)(t)
     loop {
-        val _,e = await :key.dn
+        val e = await :key.dn
         match e.key {
             :Left => {
                 if cur > 1 {
