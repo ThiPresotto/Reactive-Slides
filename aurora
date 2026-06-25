@@ -1,22 +1,22 @@
 require "atmos.env.pico"
 val pico = require "pico"
 
-val color =  @{
+val color =  [
     bg = 'white',
     fg = 'black',
-}
+]
 
-pico.zet.window @{ title="Apresentação" }
-pico.zet.dim @{'!', w=800, h=600}
-pico.zet.pencil @{
+pico.set.window [ title="Apresentação" ]
+pico.set.dim ['!', w=800, h=600]
+pico.set.pencil [
     font = "DejaVuSans.ttf"
-}
+]
 
 val filename = ...
 val T = dofile(filename)
 var lay = 1 
 
-val ITS = @{}
+val ITS = []
 func ITS.List (t) {
     var n = #t
     par{
@@ -39,12 +39,12 @@ func ITS.List (t) {
           }
        }       
     }with{
-       every :draw {
+       loop on :draw {
            loop i in n {
-               pico.output.draw.text(t[i], @{
+               pico.output.draw.text(t[i], [
                    '%', x=0.1, y=0.15+(i*0.075), h=0.05, anchor=:W
-               })
-               pico.output.draw.oval @{'%',x=0.05,y=0.15+(i*0.075),h=0.02,w=0.02,anchor=:W}
+               ])
+               pico.output.draw.oval ['%',x=0.05,y=0.15+(i*0.075),h=0.02,w=0.02,anchor=:W]
            } 
        }
     }
@@ -52,7 +52,7 @@ func ITS.List (t) {
 
 func ITS.Queue (t) {
    
-   val list = @{}   
+   val list = []   
    
    par{
       loop{
@@ -66,13 +66,13 @@ func ITS.Queue (t) {
 
                   match e.key {
                      :1 =>{
-                        set list[#list+1] = t[1]
+                        set list@+ = t@1
                      }
                      :2 =>{
-                        set list[#list+1] = t[2]
+                        set list@+ = t@2
                      }
                      :3 =>{
-                        set list[#list+1] = t[3]
+                        set list@+ = t@3
                      }
                      :Q =>{
                         break()
@@ -83,11 +83,11 @@ func ITS.Queue (t) {
          }
       }
    }with{
-      every :draw{
-         loop i in #list{
-            pico.output.draw.text(list[i],@{
+      loop on :draw {
+         loop i,v in list {
+            pico.output.draw.text(v,[
                '%', x=0.1, y=0.15+(i*0.075),h=0.05,anchor=:W
-            })
+            ])
          }
       }
    }
@@ -106,34 +106,34 @@ func ITS.ListL (t) {
 
 ;;Layer information
 ;;==============================================================
-      pico.layer.empty(nil,"list"++lay,false,@{'!',w=800,h=600})
-      pico.zet.layer("list"++lay)
+      pico.layer.empty(nil,"list"++lay,false,['!',w=800,h=600])
+      pico.set.layer("list"++lay)
       set lisLay = lay
       set lay = lay+1
-      pico.zet.pencil @{color = 0x000000}
-      pico.zet.pencil @{font = "DejaVuSans.ttf"}
+      pico.set.pencil [color = 0x000000]
+      pico.set.pencil [font = "DejaVuSans.ttf"]
 ;;==============================================================
 
       val skip = t.skip || 0.075
       
       if (t.btitle) {
-         pico.output.draw.text(t.btitle,@{
+         pico.output.draw.text(t.btitle,[
             '%',x=0.05,y=0.15 + skip,h=0.055, anchor=:W
-         })
+         ])
       }
 
       val start_index = (t.btitle && 1) || 0
       loop i in n {
-         pico.output.draw.text(t[i],@{
+         pico.output.draw.text(t[i],[
             '%',x=0.1,y=0.15+((i+start_index)*skip),h=0.05,anchor=:W
-         })
+         ])
        }
        if (((t.bullet == nil) && true) || t.bullet){
           loop i in n{
-             pico.output.draw.oval @{'%',x=0.05,y=0.15+((i+start_index)*skip),h=0.02,w=0.02,anchor=:W}
+             pico.output.draw.oval ['%',x=0.05,y=0.15+((i+start_index)*skip),h=0.02,w=0.02,anchor=:W]
           }
        }
-       pico.zet.layer("world")
+       pico.set.layer("world")
     }
     updateLayer()
 
@@ -171,48 +171,48 @@ func ITS.ListL (t) {
       }
 
    }with{
-      every :draw {
-         pico.output.draw.layer("list"++lisLay,@{
+      loop on :draw {
+         pico.output.draw.layer("list"++lisLay,[
             '%',x=xpos,y=0,anchor=:NW
-         })
+         ])
       }
    }
 }
 
 func ITS.Text (t) {
-   val lines = @{}
+   val lines = []
    loop line in t[1]::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
    }
-   every :draw {
+   loop on :draw {
       loop i in #lines {
-            pico.output.draw.text(lines[i], @{
+            pico.output.draw.text(lines[i], [
                 '%', x=0.1, y=0.15+(i*0.075), h=0.05, anchor=:W
-            })
+            ])
         }
    }
 }
 
 func ITS.TextL (t) {
 
-   pico.layer.empty(nil,"text"++lay,false,@{'!',w=800,h=600})
+   pico.layer.empty(nil,"text"++lay,false,['!',w=800,h=600])
    var texLay = lay
-   pico.zet.layer("text"++lay)
-   pico.zet.pencil @{font = "DejaVuSans.ttf"}
-   pico.zet.pencil @{color = 0x000000}
+   pico.set.layer("text"++lay)
+   pico.set.pencil [font = "DejaVuSans.ttf"]
+   pico.set.pencil [color = 0x000000]
    set lay = lay+1
 
-   val lines = @{}
+   val lines = []
    loop line in t[1]::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
    }
    loop i in #lines{
-      pico.output.draw.text(lines[i],@{
+      pico.output.draw.text(lines[i],[
           '%', x=0.05,y=0.15+(i*0.075),h=0.05, anchor=:W
-      })
+      ])
    }
 
-   pico.zet.layer("world")
+   pico.set.layer("world")
 
    var xpos = 0
 
@@ -224,10 +224,10 @@ func ITS.TextL (t) {
          set xpos = 0.50
       }
    }
-   every :draw {
-      pico.output.draw.layer("text"++texLay,@{
+   loop on :draw {
+      pico.output.draw.layer("text"++texLay,[
           '%',x=xpos,y=0,anchor=:NW, 
-      })
+      ])
    }
 }
 
@@ -244,16 +244,16 @@ func ITS.Image (t) {
       val f = 0.5/img.h
       set dw = img.w * f
    }
-every :draw {
-      pico.output.draw.image(t[1], @{
+loop on :draw {
+      pico.output.draw.image(t[1], [
 		  '%', x=0.5,y=0.5,w=dw,h=dh
-      })
+      ])
    }
 }
 
 func ITS.ImageL (t) {
-   pico.layer.empty(nil,"image"++lay,false,@{'!',w=800,h=600})
-   pico.zet.layer("image"++lay)
+   pico.layer.empty(nil,"image"++lay,false,['!',w=800,h=600])
+   pico.set.layer("image"++lay)
    var imaLay = lay
    set lay = lay + 1
 
@@ -269,10 +269,10 @@ func ITS.ImageL (t) {
       val f = 0.5/img.h
       set dw = img.w * f
    }
-   pico.output.draw.image(t[1],@{
+   pico.output.draw.image(t[1],[
       '%',x=0.5,y=0.5,w=1,h=1
-   })
-   pico.zet.layer("world")
+   ])
+   pico.set.layer("world")
 
    var xpos = 0.5
    var ypos = 0.5
@@ -292,36 +292,36 @@ func ITS.ImageL (t) {
       }
    }
 
-   every :draw{
-      pico.output.draw.layer("image"++imaLay, @{
+   loop on :draw{
+      pico.output.draw.layer("image"++imaLay, [
           '%',x=xpos,y=ypos,w=width,h=height
-      })
+      ])
    }
 }
 
-val TPL = @{}
+val TPL = []
 func TPL.Cover (t) {
-    every :draw {
-        pico.zet.pencil @{
+    loop on :draw {
+        pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
-        }
+        ]
 
-        pico.output.draw.text(t.title || "", @{
+        pico.output.draw.text(t.title || "", [
             '%', x=0.5, y=0.2, h=0.1
-        })
-        pico.output.draw.text(t.subtitle || "", @{
+        ])
+        pico.output.draw.text(t.subtitle || "", [
             '%', x=0.5, y=0.3, h=0.075
-        })
+        ])
 
-        pico.output.draw.text(t.author || "", @{
+        pico.output.draw.text(t.author || "", [
             '%', x=0.5, y=0.7,  h=0.05
-        })
-        pico.output.draw.text(t.inst || "", @{
+        ])
+        pico.output.draw.text(t.inst || "", [
             '%', x=0.5, y=0.75, h=0.05
-        })
-        pico.output.draw.text(t.date || "", @{
+        ])
+        pico.output.draw.text(t.date || "", [
             '%', x=0.5, y=0.8,  h=0.05
-        })
+        ])
     }
 }
 
@@ -333,16 +333,16 @@ func TPL.Ref (t) {
    var tot_ref = #t
 
    func drawRef(t){
-      pico.zet.pencil @{
+      pico.set.pencil [
          color = (t.color && t.color.fg) || color.fg
-      }
-      every :draw{
-         pico.output.draw.text(t.title,@{
+      ]
+      loop on :draw{
+         pico.output.draw.text(t.title,[
             '%', x=0.5, y=0.3,h=0.04
-         })
-         pico.output.draw.text(cur_ref++"/"++tot_ref,@{
+         ])
+         pico.output.draw.text(cur_ref++"/"++tot_ref,[
             '%', x=0.8, y=0.3,h=0.08
-         })
+         ])
       }
    }
 
@@ -366,13 +366,13 @@ func TPL.Ref (t) {
          }
       }
    }with{
-      every :draw{
-         pico.zet.pencil @{
+      loop on :draw{
+         pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
-         }
-         pico.output.draw.text("REFERENCE", @{
+         ]
+         pico.output.draw.text("REFERENCE", [
             '%', x=0.2, y=0.1, h =0.075
-         })
+         ])
       }
    }
 }
@@ -381,13 +381,13 @@ func TPL.One (t) {
     val one = t[1]
 print(one.tag)
     spawn ITS[one.tag](one)
-    every :draw {
-        pico.zet.pencil @{
+    loop on :draw {
+        pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
-        }
-        pico.output.draw.text(t.title || "", @{
+        ]
+        pico.output.draw.text(t.title || "", [
             '%', x=0.5, y=0.1, h=0.075
-        })
+        ])
     }
 }
 
@@ -399,16 +399,16 @@ func TPL.Two(t) {
     spawn ITS[one.tag](one)
     spawn ITS[two.tag](two)
 
-    every :draw {
-        pico.zet.pencil @{
+    loop on :draw {
+        pico.set.pencil [
            color = (t.color && t.color.fg) || color.fg
-        }
-        pico.output.draw.text(t.title || "", @{
+        ]
+        pico.output.draw.text(t.title || "", [
            '%',x=0.5,y=0.1,h=0.075
-        })
-        pico.zet.pencil @{
+        ])
+        pico.set.pencil [
            color = "black"
-        }
+        ]
     }
 }
 
@@ -416,9 +416,9 @@ var cur = 1
 loop {
     print(:cur, cur)
     val t = T[cur]
-    pico.zet.effect @{
+    pico.set.effect [
         color = (t.color && t.color.bg) || color.bg
-    }
+    ]
     spawn TPL[t.template](t)
     loop {
         val _,e = await :key.dn
