@@ -17,7 +17,7 @@ val T = dofile(filename)
 var lay = 1 
 
 val ITS = []
-func ITS.List (t) {
+task ITS.List (t) {
     var n = #t
     par{
        if (t.anim){
@@ -50,7 +50,7 @@ func ITS.List (t) {
     }
 }
 
-func ITS.Queue (t) {
+task ITS.Queue (t) {
    
    val list = []   
    
@@ -93,7 +93,7 @@ func ITS.Queue (t) {
    }
 }
 
-func ITS.ListL (t) {
+task ITS.ListL (t) {
 
    if t.anim {
        set n = 0
@@ -179,7 +179,7 @@ func ITS.ListL (t) {
    }
 }
 
-func ITS.Text (t) {
+task ITS.Text (t) {
    val lines = []
    loop line in t@1::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
@@ -193,7 +193,7 @@ func ITS.Text (t) {
    }
 }
 
-func ITS.TextL (t) {
+task ITS.TextL (t) {
 
    pico.layer.empty(nil,"text"++lay,false,['!',w=800,h=600])
    var texLay = lay
@@ -231,7 +231,7 @@ func ITS.TextL (t) {
    }
 }
 
-func ITS.Image (t) {
+task ITS.Image (t) {
    val img = pico.get.image(t[1]) 
    var dh, dw
    if img.w >= img.h {
@@ -244,14 +244,14 @@ func ITS.Image (t) {
       val f = 0.5/img.h
       set dw = img.w * f
    }
-loop on :draw {
+   loop on :draw {
       pico.output.draw.image(t[1], [
-		  '%', x=0.5,y=0.5,w=dw,h=dh
+         '%', x=0.5,y=0.5,w=dw,h=dh
       ])
    }
 }
 
-func ITS.ImageL (t) {
+task ITS.ImageL (t) {
    pico.layer.empty(nil,"image"++lay,false,['!',w=800,h=600])
    pico.set.layer("image"++lay)
    var imaLay = lay
@@ -300,7 +300,7 @@ func ITS.ImageL (t) {
 }
 
 val TPL = []
-func TPL.Cover (t) {
+task TPL.Cover (t) {
     loop on :draw {
         pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
@@ -327,12 +327,12 @@ func TPL.Cover (t) {
 
 ;;-> TODO: FAZER FUNÇÃO DE REFERENCIA (TA TODA CAGADA)
 
-func TPL.Ref (t) {
+task TPL.Ref (t) {
   
    var cur_ref = 1
    var tot_ref = #t
 
-   func drawRef(t){
+   task drawRef(t){
       pico.set.pencil [
          color = (t.color && t.color.fg) || color.fg
       ]
@@ -377,7 +377,7 @@ func TPL.Ref (t) {
    }
 }
 
-func TPL.One (t) {
+task TPL.One (t) {
     val one = t[1]
 print(one.tag)
     spawn ITS[one.tag](one)
@@ -391,7 +391,7 @@ print(one.tag)
     }
 }
 
-func TPL.Two(t) { 
+task TPL.Two(t) { 
     val one = t[1]
     val two = t[2]
     set one.pos = "left"
