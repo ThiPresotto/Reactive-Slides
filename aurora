@@ -1,7 +1,7 @@
 require "atmos.env.pico"
 val pico = require "pico"
 
-val color = @{
+val color =  @{
     bg = 'white',
     fg = 'black',
 }
@@ -61,9 +61,9 @@ func ITS.Queue (t) {
             :Q => {
                loop {
                val _,e = await :key.dn
-;; TODO: CONVERTER PARA QUALQUER NÚMERO
-;; TODO: NAO PERMITIR ARGUMENTO REPETIDO
-;;
+;;-> TODO: CONVERTER PARA QUALQUER NÚMERO
+;;-> TODO: NAO PERMITIR ARGUMENTO REPETIDO
+
                   match e.key {
                      :1 =>{
                         set list[#list+1] = t[1]
@@ -171,7 +171,6 @@ func ITS.ListL (t) {
       }
 
    }with{
-      ;;val xtest = xpos
       every :draw {
          pico.output.draw.layer("list"++lisLay,@{
             '%',x=xpos,y=0,anchor=:NW
@@ -307,7 +306,6 @@ func TPL.Cover (t) {
             color = (t.color && t.color.fg) || color.fg
         }
 
-        ;; title, subtitle
         pico.output.draw.text(t.title || "", @{
             '%', x=0.5, y=0.2, h=0.1
         })
@@ -315,7 +313,6 @@ func TPL.Cover (t) {
             '%', x=0.5, y=0.3, h=0.075
         })
 
-        ;; author, institution, date
         pico.output.draw.text(t.author || "", @{
             '%', x=0.5, y=0.7,  h=0.05
         })
@@ -328,16 +325,55 @@ func TPL.Cover (t) {
     }
 }
 
+;;-> TODO: FAZER FUNÇÃO DE REFERENCIA (TA TODA CAGADA)
+
 func TPL.Ref (t) {
+  
+   var cur_ref = 1
+   var tot_ref = #t
 
-
-   every :draw{
+   func drawRef(t){
       pico.zet.pencil @{
-          color = (t.color && t.color.fg) || color.fg
+         color = (t.color && t.color.fg) || color.fg
       }
-      pico.output.draw.text("REFERENCE",@{
-         '%',x=0.5, y=0.1,h=0.075
-      })
+      every :draw{
+         pico.output.draw.text(t.title,@{
+            '%', x=0.5, y=0.3,h=0.04
+         })
+         pico.output.draw.text(cur_ref++"/"++tot_ref,@{
+            '%', x=0.8, y=0.3,h=0.08
+         })
+      }
+   }
+
+   par{
+      loop{
+         par{
+            val _,e = await :key.dn
+            match e.key {
+               :Up =>{
+                  if (cur_ref <= 1) => break()
+                  cur_ref - 1
+               }
+               :Down =>{
+                  if (cur_ref >= #t) => break()
+                  cur_ref + 1
+               }
+            }
+         }with{
+            spawn drawRef(t[cur_ref])
+            await(false)
+         }
+      }
+   }with{
+      every :draw{
+         pico.zet.pencil @{
+            color = (t.color && t.color.fg) || color.fg
+         }
+         pico.output.draw.text("REFERENCE", @{
+            '%', x=0.2, y=0.1, h =0.075
+         })
+      }
    }
 }
 

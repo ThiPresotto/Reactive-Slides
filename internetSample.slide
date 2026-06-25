@@ -83,11 +83,18 @@ return {
 		template = 'Ref',
 		{
 			type = 'Article',
-			title = "pcr: An R package for quality assessment, analysis and testing of qPCR data.
+			title = "pcr: An R package for quality assessment, analysis and testing of qPCR data.",
 			author = {
 				"Ahmed, M",
 				"Kim, D",
 			},
-                }
+                },
+		{
+			type = 'Article',
+			title = "Apenas um teste",
+			author = {
+				"Presotto, T",
+			},
+		}
 	}
 }
