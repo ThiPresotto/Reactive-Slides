@@ -232,6 +232,63 @@ set ITS.TextL = task (t) {
    }
 }
 
+set ITS.Table = task (t) {
+   
+   var head_total_width = 0 
+   var heading_widths = [] 
+   var spacing_width = 0.02 
+
+   loop _, word in t.head{
+      var measure = pico.get.text(['%',h=0.05],word)
+      table.insert(heading_widths,measure.w)
+      set head_total_width = head_total_width + measure.w
+   }
+
+   var start_x = 0.5 - (((spacing_width*(#t.head-1))+head_total_width)/2)
+   val total_width = head_total_width + (spacing_width * (#t.head-1))
+
+   loop on :draw {
+ 
+      var current_x = start_x      
+
+;;Headings
+      loop i, word in t.head{
+         pico.output.draw.text(word,[
+            '%',x = current_x, y= 0.3,h=0.05,anchor=:W
+         ])
+         set current_x = current_x + heading_widths@i +spacing_width 
+      }
+ 
+      var row_y = 0.4
+
+      pico.output.draw.rect ['%',x=start_x,y=0.35,w=total_width,h=0.005,anchor=:NW]
+
+
+
+;;Rows
+      loop i in #t{
+         var row = t@i
+         var current_x = start_x
+         loop j, cell in row{
+            pico.output.draw.text(cell,[
+               '%',x=current_x, y=row_y,h=0.04,anchor=:W
+            ])
+            set current_x = current_x + heading_widths@j +spacing_width 
+         }
+         set row_y = row_y + 0.05
+      }
+  
+;;Vertical Separator
+   var sep_x = start_x
+   loop i in #t.head-1{
+      set sep_x = sep_x + heading_widths@i + spacing_width
+      pico.output.draw.rect ['%',x=sep_x-(spacing_width/2),y=0.3,w=0.003,h=row_y-0.3,anchor=:NW]
+   }
+
+      pico.output.draw.rect ['%',x=start_x,y=row_y,w=total_width,h=0.005,anchor=:W]
+   }
+}
+
 set ITS.Image = task (t) {
    val img = pico.get.image(t@1) 
    var dh, dw
@@ -302,14 +359,67 @@ set ITS.ImageL = task (t) {
 
 val TPL = []
 set TPL.Cover = task (t) {
+    var dim = ['%',h=0.1]
+    var x = pico.get.text(dim,t.title)
+    var title_lines = []
+    var title_text = t.title || ""
+    var font_size = 0.1
+    var max_width = 0.8
+
+    func wrap(text,max_width,font_size){
+       
+
+       var lines = []
+       var words = []
+
+       loop word in string.gmatch(text,"%S+"){
+          table.insert(words,word)
+       } 
+
+       if #words == 0 => return(text)
+ 
+       var current_line = ""
+       loop i, word in words{
+           var test_line = current_line
+           if (test_line != "") {
+              set test_line = test_line++" "++word
+           }
+           else {
+              set test_line = word
+           }
+
+           var dim = ['%',h=font_size]
+           pico.get.text(dim,test_line)
+
+           if dim.w <= max_width { 
+              set current_line = test_line
+           }
+           else {
+              table.insert(lines,current_line)
+              set current_line = word
+           }
+
+       }
+
+        if current_line != "" => table.insert(lines,current_line)
+        return(lines)
+    }
+
+    var title_lines = wrap(title_text, max_width, font_size)
+    var start_y=0.2
+    var line_height = font_size*1.2
+
     loop on :draw {
         pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
         ]
 
-        pico.output.draw.text(t.title || "", [
-            '%', x=0.5, y=0.2, h=0.1
-        ])
+        loop i, line in title_lines{
+           pico.output.draw.text(line,[
+              '%',x=0.5,y=start_y+((i-1)*line_height),h=font_size
+           ])
+        }
+
         pico.output.draw.text(t.subtitle || "", [
             '%', x=0.5, y=0.3, h=0.075
         ])
@@ -330,50 +440,53 @@ set TPL.Cover = task (t) {
 
 set TPL.Ref = task (t) {
   
-   var cur_ref = 1
+   var cur_idx = 1
    var tot_ref = #t
+   var current_ref = t@cur_idx
 
-   task drawRef(t){
+   task drawRef(ref){
       pico.set.pencil [
-         color = (t.color && t.color.fg) || color.fg
+         color = color.fg
       ]
       loop on :draw{
-         pico.output.draw.text(t.title,[
-            '%', x=0.5, y=0.3,h=0.04
+
+         pico.output.draw.text("REFERENCES", [
+            '%',x=0.5,y=0.08,h=0.075
          ])
-         pico.output.draw.text(cur_ref++"/"++tot_ref,[
-            '%', x=0.8, y=0.3,h=0.08
+
+         pico.output.draw.text(ref.title,[
+            '%', x=0.5, y=0.3,h=0.05
+         ])
+
+         var author_text = table.concat(ref.author, "; ")
+         pico.output.draw.text(author_text,[
+            '%',x=0.5,y=0.4,h=0.04
+         ])
+ 
+         pico.output.draw.text(cur_idx++"/"++tot_ref,[
+            '%', x=0.85, y=0.08,h=0.06,anchor = :E
          ])
       }
    }
 
-   par{
-      loop{
-         par{
-            val e = await :key.dn
-            match e.key {
-               :Up =>{
-                  if (cur_ref <= 1) => break()
-                  cur_ref - 1
-               }
-               :Down =>{
-                  if (cur_ref >= #t) => break()
-                  cur_ref + 1
-               }
+   loop{
+      par :any{
+         val e = await :key.dn
+         match e.key {
+            :Up =>{
+               if (cur_idx <= 1) => break() ;;possibilidade de continue?
+               set cur_idx = cur_idx - 1
+               set current_ref = t@cur_idx
             }
-         }with{
-            spawn drawRef(t@cur_ref)
-            await(false)
+            :Down =>{
+               if (cur_idx >= #t) => break()
+               set cur_idx = cur_idx + 1
+               set current_ref = t@cur_idx
+            }
          }
-      }
-   }with{
-      loop on :draw{
-         pico.set.pencil [
-            color = (t.color && t.color.fg) || color.fg
-         ]
-         pico.output.draw.text("REFERENCE", [
-            '%', x=0.2, y=0.1, h =0.075
-         ])
+      }with{
+         spawn drawRef(t@cur_idx)
+         await(false)
       }
    }
 }
