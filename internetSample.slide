@@ -1,5 +1,20 @@
+-- lin=1, col=2
+--{	-- linha 1
+--  {},	--   col 1
+--  {},   --   col 2
+--}
+
+-- lin=2, col=1
+--{      -- linha 1
+--  {},       col 1
+--},
+--{      -- linha 2
+--  {},       col 1
+--},
+
+
+
 return {
-	--1============
 	{
 		template = 'Cover',
 		title    = "Title for a minimal beamer presentation",
@@ -11,106 +26,111 @@ return {
 			fg = "black"
 		},
 	},
-	--2============
 	{
-		template = 'One',
+		template = 'Grid',
 		title    = "Outline",
 		{
-			tag  = 'ListL',
-			anim = false,
-                        bullet = false,
-			skip = 0.15,
-			"Section One",
-			"Section Two",
-			"References",
-		}
-	},
-	--3============
-        {
-                template = 'One',
-                title    = "Slide with bullet points",
-                {
-                        tag   = 'ListL',
-                        anim  = false,
-			btitle = "This is a bullet list of two points:",
-                        "Point one",
-                        "Point two",
-                }
-        },
-	--4============
-	{
-		template = 'Two',
-		title = "Slide with two columns",
-		{
-			tag = 'Text',
-			[[Text goes in first column.
-]]
-		},
-		{
-			tag = 'TextL',
-			[[Text goes in second column
-]]
-		}
-	},
-	--5============
-	{
-		template = 'One',
-		title = "Slide with Table",
-		{
-			tag = 'Table',
-			head = {
-				"Heading1",
-				"Heading2",
-				"Heading3",
-			},
 			{
-				"Row1",
-				"0.1",
-				".01"
-			},
-			{
-				"Row2",
-				"0.2",
-				".02"
-			},
-			{
-				"Row3",
-				"0.3",
-				"0.03"
-			},
-			{
-				"Row4",
-				"0.4",
-				"0.04"
+				tag  = 'ListL',
+				anim = false,
+				bullet = false,
+				skip = 0.15,
+				"Section One",
+				"Section Two",
+				"References",
 			}
 		}
 	},
-	--6============
+        {
+                template = 'Grid',
+                title    = "Slide with bullet points",
+                {
+			{
+				tag   = 'ListL',
+                        	anim  = false,
+				btitle = "This is a bullet list of two points:",
+                        	"Point one",
+                        	"Point two",
+			}
+                }
+        },
+	{
+		template = 'Grid',
+		title = "Slide with two columns",
+		{
+			{
+				tag = 'TextL',
+				[[Text goes in first column.
+]]
+			},
+			{
+				tag = 'TextL',
+				[[Text goes in second column
+]]
+			}
+		}
+	},
+	{
+		template = 'Grid',
+		title = "Slide with Table",
+		{
+			{
+				tag = 'Table',
+				head = {
+					"Heading1",
+					"Heading2",
+					"Heading3",
+				},
+				{
+					"Row1",
+					"0.1",
+					".01"
+				},
+				{
+					"Row2",
+					"0.2",
+					".02"
+				},
+				{
+					"Row3",
+					"0.3",
+					"0.03"
+				},
+				{
+					"Row4",
+					"0.4",
+					"0.04"
+				}
+			}
+		}
+	},
 --TODO: AURORA IMPLEMENTAR CAPTION
 	{
-		template = 'One',
+		template = 'Grid',
 		title = "Slide with figure",
 		{
-			tag = 'ImageL',
-			caption = "Figure 1: Caption for figure one.",
-			"C_logo.png",
+			{
+				tag = 'ImageL',
+				caption = "Figure 1: Caption for figure one.",
+				"C_logo.png",
+			}
 		}
 	},
-	--7============
 	{
-		template = 'One',
+		template = 'Grid',
 		title    = "Slide with references",
 		{
-			tag = 'ListL',
-			anim = false,
-			bullet = false,
-			"This is to reference a figure (Figure 1)",
-			"This is to reference a table (Table 1)",
-			"This is to cite an article [Ahmed and Kim, 2018]",
-			"This is to add an article to the references without mentioning in the text",
+			{
+				tag = 'ListL',
+				anim = false,
+				bullet = false,
+				"This is to reference a figure (Figure 1)",
+				"This is to reference a table (Table 1)",
+				"This is to cite an article [Ahmed and Kim, 2018]",
+				"This is to add an article to the references without mentioning in the text",
+			}
 		}
 	},
-	--8============
 	{
 		template = 'Ref',
 		{

@@ -436,7 +436,7 @@ set TPL.Cover = task (t) {
     }
 }
 
-;;-> TODO: FAZER FUNÇÃO DE REFERENCIA (TA TODA CAGADA)
+;;-> TODO: MELHORAR FUNÇÃO DE REFERENCIA 
 
 set TPL.Ref = task (t) {
   
@@ -473,12 +473,12 @@ set TPL.Ref = task (t) {
       par :any{
          val e = await :key.dn
          match e.key {
-            :Up =>{
+            :Down=>{
                if (cur_idx <= 1) => break() ;;possibilidade de continue?
                set cur_idx = cur_idx - 1
                set current_ref = t@cur_idx
             }
-            :Down =>{
+            :Up=>{
                if (cur_idx >= #t) => break()
                set cur_idx = cur_idx + 1
                set current_ref = t@cur_idx
@@ -489,6 +489,49 @@ set TPL.Ref = task (t) {
          await(false)
       }
    }
+}
+
+set TPL.Grid = task (t) {
+   var total_rows = #t
+   var total_cols = 0
+   
+   pin grid_objects = tasks()
+
+   loop i in total_rows{
+      var row = t@i
+      if #row > total_cols{
+         set total_cols = #row
+      }
+   }
+
+   var title_height = 0.15
+   var cell_width = 1.0 / total_cols
+   var cell_height = (1.0 - title_height) / total_rows
+
+
+;;CALCULAR POSIÇÃO DOS GRIDS
+   loop row_idx in total_rows{
+      var row = t@row_idx
+      loop col_idx in #row{
+         var item = row@col_idx
+         if item {
+            spawn @grid_objects ITS@(item.tag)(item)
+         }
+      }
+   }
+;;; 
+   loop {
+     spawn @items row@tag
+   }
+;;;
+   loop on :draw{
+      pico.set.pencil [
+         color = (t.color && t.color.fg) || color.fg
+      ]
+      pico.output.draw.text(t.title || "",[
+         '%',x=0.5,y=0.1,h=0.075
+      ])
+   } 
 }
 
 set TPL.One = task (t) {
