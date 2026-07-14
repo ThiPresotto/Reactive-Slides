@@ -468,41 +468,6 @@ set TPL.Grid = task (t) {
    } 
 }
 
-set TPL.One = task (t) {
-    val one = t@1
-print(one.tag)
-    spawn ITS@(one.tag)(one)
-    loop on :draw {
-        pico.set.pencil [
-            color = (t.color && t.color.fg) || color.fg
-        ]
-        pico.output.draw.text(t.title || "", [
-            '%', x=0.5, y=0.1, h=0.075
-        ])
-    }
-}
-
-set TPL.Two = task (t) { 
-    val one = t@1
-    val two = t@2
-    set one.pos = "left"
-    set two.pos = "right"
-    spawn ITS@(one.tag)(one)
-    spawn ITS@(two.tag)(two)
-
-    loop on :draw {
-        pico.set.pencil [
-           color = (t.color && t.color.fg) || color.fg
-        ]
-        pico.output.draw.text(t.title || "", [
-           '%',x=0.5,y=0.1,h=0.075
-        ])
-        pico.set.pencil [
-           color = "black"
-        ]
-    }
-}
-
 var cur = 1
 loop {
     print(:cur, cur)
