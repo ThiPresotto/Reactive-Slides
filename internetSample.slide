@@ -61,11 +61,13 @@ return {
 			{
 				tag = 'TextL',
 				[[Text goes in first column.
+Second line of first column
 ]]
 			},
 			{
 				tag = 'TextL',
 				[[Text goes in second column
+Second line of second column
 ]]
 			}
 		}
@@ -150,3 +152,5 @@ return {
 		}
 	}
 }
+
+

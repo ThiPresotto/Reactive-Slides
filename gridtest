@@ -1,0 +1,162 @@
+return {
+        {
+                template = 'Grid',
+                title    = "1x2",
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+			},
+                }
+        },
+        {
+                template = 'Grid',
+                title    = "2x2",
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+		{
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        }
+		},
+
+        },
+        {
+                template = 'Grid',
+                title    = "1x1",
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                }
+        },
+        {
+                template = 'Grid',
+                title    = "3x1",
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+
+
+        },
+        {
+                template = 'Grid',
+                title    = "3x3",
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+                {
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                        {
+                                tag = 'ImageL',
+                                caption = "Figure 1: Caption for figure one.",
+                                "C_logo.png",
+
+                        },
+                },
+        },
+
+
+}

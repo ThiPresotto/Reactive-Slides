@@ -169,19 +169,14 @@ set ITS.TextL = task (t) {
 
    pico.set.layer("world")
 
-   var xpos = 0
+   var xpos = t.xpos - 0.25
+   var ypos = t.ypos - 0.025
+   var width = t.width
+   var height = t.height
 
-   ifs{
-      t.pos == :left => {
-         set xpos = 0
-      }
-      t.pos == :right => {
-         set xpos = 0.50
-      }
-   }
    loop on :draw {
       pico.output.draw.layer("text"++texLay,[
-          '%',x=xpos,y=0,anchor=:NW, 
+          '%',x=xpos,y=ypos, anchor=:W,
       ])
    }
 }
@@ -243,6 +238,84 @@ set ITS.Table = task (t) {
    }
 }
 
+set ITS.TableL = task (t) {
+  
+   pico.layer.empty(nil,"table"++lay,false,['!',w=800,h=600])
+   var tableLay = lay
+   pico.set.layer("table"++lay)
+   set lay = lay + 1
+
+   -- Calcular larguras dos cabeçalhos
+   var head_total_width = 0
+   var heading_widths = []
+   var spacing_width = 0.02
+
+   loop _, word in t.head{
+      var measure = pico.get.text(['%',h=0.05],word)
+      table.insert(heading_widths,measure.w)
+      set head_total_width = head_total_width + measure.w
+   }
+
+   var start_x = 0.5 - (((spacing_width*(#t.head-1))+head_total_width)/2)
+   val total_width = head_total_width + (spacing_width * (#t.head-1))
+
+   -- Desenhar a tabela no layer (uma vez só)
+   var current_x = start_x
+   var row_y = 0.3
+
+   -- Desenhar cabeçalhos
+   loop i, word in t.head{
+      pico.output.draw.text(word,[
+         '%',x = current_x, y= row_y,h=0.05,anchor=:W
+      ])
+      set current_x = current_x + heading_widths@i + spacing_width
+   }
+
+   -- Linha horizontal superior
+   set row_y = row_y + 0.05
+   pico.output.draw.rect ['%',x=start_x,y=row_y,w=total_width,h=0.005,anchor=:NW]
+
+   -- Desenhar linhas da tabela
+   set row_y = row_y + 0.05
+   loop i in #t{
+      var row = t@i
+      var current_x = start_x
+      loop j, cell in row{
+         pico.output.draw.text(cell,[
+            '%',x=current_x, y=row_y,h=0.04,anchor=:W
+         ])
+         set current_x = current_x + heading_widths@j + spacing_width
+      }
+      set row_y = row_y + 0.05
+   }
+
+   -- Linha horizontal inferior
+   pico.output.draw.rect ['%',x=start_x,y=row_y,w=total_width,h=0.005,anchor=:W]
+
+   -- Linhas verticais separadoras
+   var sep_x = start_x
+   loop i in #t.head-1{
+      set sep_x = sep_x + heading_widths@i + spacing_width
+      pico.output.draw.rect ['%',x=sep_x-(spacing_width/2),y=0.3,w=0.003,h=row_y-0.3,anchor=:NW]
+   }
+
+ 
+   pico.set.layer("world")
+
+
+   var xpos = t.xpos || 0.5
+   var ypos = t.ypos || 0.5
+   var width = t.width || 1.0
+   var height = t.height || 1.0
+
+   -- Desenhar o layer da tabela no slide
+   loop on :draw{
+      pico.output.draw.layer("table"++tableLay, [
+          '%', x=xpos, y=ypos, w=width, h=height
+      ])
+   }
+}
+
 set ITS.ImageL = task (t) {
    pico.layer.empty(nil,"image"++lay,false,['!',w=800,h=600])
    pico.set.layer("image"++lay)
@@ -250,43 +323,36 @@ set ITS.ImageL = task (t) {
    set lay = lay + 1
 
    val img = pico.get.image(t@1)
-   var dh,dw
-   if img.w >= img.h {
-      set dw = 0.5
-      val f = 0.5/img.w
-      set dh = img.h * f
-   }
-   else {
-      set dh = 0.5
-      val f = 0.5/img.h
-      set dw = img.w * f
-   }
+
    pico.output.draw.image(t@1,[
       '%',x=0.5,y=0.5,w=1,h=1
    ])
    pico.set.layer("world")
 
-   var xpos = 0.5
-   var ypos = 0.5
-   var width = dw
-   var height = dh
+   var cell_x = t.xpos
+   var cell_y = t.ypos
+   var cell_width = t.width
+   var cell_height = t.height
 
-   ifs{
-      t.pos == :left => {
-         set xpos = 0.25
-         set width = dw * 0.8
-         set height = dh * 0.8
-      }
-      t.pos == :right => {
-         set xpos = 0.75
-         set width = dw * 0.8
-         set height = dh * 0.8
-      }
+   var img_aspect = img.w / img.h
+   var cell_aspect = cell_width / cell_height
+
+   var final_width, final_height
+
+   if img_aspect > cell_aspect {
+      set final_width = cell_width
+      set final_height = cell_width / img_aspect
+   } else {
+      set final_height = cell_height
+      set final_width = cell_height * img_aspect
    }
+
+   var xpos = cell_x
+   var ypos = cell_y
 
    loop on :draw{
       pico.output.draw.layer("image"++imaLay, [
-          '%',x=xpos,y=ypos,w=width,h=height
+          '%',x=xpos,y=ypos,w=final_width,h=final_height
       ])
    }
 }
@@ -369,7 +435,6 @@ set TPL.Cover = task (t) {
         ])
     }
 }
-
 ;;-> TODO: MELHORAR FUNÇÃO DE REFERENCIA 
 
 set TPL.Ref = task (t) {
@@ -449,15 +514,27 @@ set TPL.Grid = task (t) {
       loop col_idx in #row{
          var item = row@col_idx
          if item {
+            var cell_x = ((col_idx - 1) * cell_width) + (cell_width/2)
+            var cell_y = title_height + ((row_idx - 1) * cell_height) + (cell_height/2)
+
+            var xpos = cell_x
+            var ypos = cell_y
+            var width = cell_width
+            var height = cell_height
+
+            set item.xpos = xpos
+            set item.ypos  = ypos
+            set item.width = width
+            set item.height = height
+
+            print("items",xpos,ypos,width,height) 
+
             spawn @grid_objects ITS@(item.tag)(item)
          }
       }
    }
-;;; 
-   loop {
-     spawn @items row@tag
-   }
-;;;
+
+;;DESENHAR TITULO
    loop on :draw{
       pico.set.pencil [
          color = (t.color && t.color.fg) || color.fg
