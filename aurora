@@ -115,20 +115,26 @@ set ITS.ListL = task (t) {
     var cell_y = t.ypos || 0.5
     var cell_width = t.width || 0.5
     var cell_height = t.height || 0.3
-    
-    var content_width = 0.9  
-    var content_height = 0.9
-    
-    var scale_x = cell_width / content_width
-    var scale_y = cell_height / content_height
-    var scale = math.min(scale_x, scale_y) * 0.95 
-    
-    var final_width = content_width * scale
-    var final_height = content_height * scale
-    
-    var xpos = cell_x - ((cell_width / 2) + (final_width * 0.05)) 
-    var ypos = cell_y - ((cell_height / 2) + (final_height * 0.05))
 
+    var content_start_x = 0.5
+    var content_start_y = 0.35
+
+    var parent = [
+       '%',
+       x = cell_x - (cell_width / 2),
+       y = cell_y - (cell_height / 2),
+       w = cell_width,
+       h = cell_height
+    ]
+
+    var child = [
+       '%',
+       x = content_start_x,  
+       y = content_start_y  
+    ]
+
+    var pos = pico.xin.pos(parent,child)
+    
     par{
       if (t.anim){
          loop{
@@ -153,7 +159,7 @@ set ITS.ListL = task (t) {
    }with{
       loop on :draw {
          pico.output.draw.layer("list"++lisLay,[
-            '%',x=xpos,y=ypos,w=final_width,h=final_height,anchor=:NW
+            '%',x=pos.x,y=pos.y,anchor=:NW
          ])
       }
    }
@@ -181,14 +187,33 @@ set ITS.TextL = task (t) {
 
    pico.set.layer("world")
 
-   var xpos = t.xpos - 0.25
-   var ypos = t.ypos - 0.025
-   var width = t.width
-   var height = t.height
+   var cell_x = t.xpos || 0.5
+   var cell_y = t.ypos || 0.5
+   var cell_width = t.width || 0.5
+   var cell_height = t.height || 0.3
+   
+   var content_start_x = 0.5
+   var content_start_y = 0.35
+
+   var parent = [
+      '%',
+      x = cell_x - ((cell_width / 2) + (cell_width * 0.05)),  
+      y = cell_y - ((cell_height / 2) + (cell_height * 0.05)),
+      w = 1,
+      h = 1
+   ]
+   
+   var child = [
+      '%',
+      x = content_start_x, 
+      y = content_start_y 
+   ]
+   
+   var pos = pico.xin.pos(parent, child)
 
    loop on :draw {
       pico.output.draw.layer("text"++texLay,[
-          '%',x=xpos,y=ypos, anchor=:W,
+          '%',x=pos.x,y=pos.y,anchor=:NW,
       ])
    }
 }
@@ -550,14 +575,11 @@ set TPL.Grid = task (t) {
             set item.width = width
             set item.height = height
 
-            print("items",xpos,ypos,width,height) 
-
             spawn @grid_objects ITS@(item.tag)(item)
          }
       }
    }
 
-;;DESENHAR TITULO
    loop on :draw{
       pico.set.pencil [
          color = (t.color && t.color.fg) || color.fg
