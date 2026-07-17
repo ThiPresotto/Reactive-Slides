@@ -77,7 +77,7 @@ Second line of second column
 		title = "Slide with Table",
 		{
 			{
-				tag = 'Table',
+				tag = 'TableL',
 				head = {
 					"Heading1",
 					"Heading2",

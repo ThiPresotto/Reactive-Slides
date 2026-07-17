@@ -83,11 +83,17 @@ set ITS.ListL = task (t) {
 ;;==============================================================
 
       val skip = t.skip || 0.075
+      val margin_left = 0.05
+      val margin_top = 0.05
+
+      var base_x = margin_left
+      var base_y = margin_top
       
       if (t.btitle) {
          pico.output.draw.text(t.btitle,[
             '%',x=0.05,y=0.15 + skip,h=0.055, anchor=:W
          ])
+         set base_y = base_y + skip
       }
 
       val start_index = (t.btitle && 1) || 0
@@ -105,17 +111,23 @@ set ITS.ListL = task (t) {
     }
     updateLayer()
 
-    var xpos = 0
-
-    ifs{
-       t.pos == :left => {
-          set xpos = 0
-       }
-       t.pos == :right => {
-          set xpos = 0.50
-       }
-    }
-
+    var cell_x = t.xpos || 0.5
+    var cell_y = t.ypos || 0.5
+    var cell_width = t.width || 0.5
+    var cell_height = t.height || 0.3
+    
+    var content_width = 0.9  
+    var content_height = 0.9
+    
+    var scale_x = cell_width / content_width
+    var scale_y = cell_height / content_height
+    var scale = math.min(scale_x, scale_y) * 0.95 
+    
+    var final_width = content_width * scale
+    var final_height = content_height * scale
+    
+    var xpos = cell_x - ((cell_width / 2) + (final_width * 0.05)) 
+    var ypos = cell_y - ((cell_height / 2) + (final_height * 0.05))
 
     par{
       if (t.anim){
@@ -141,7 +153,7 @@ set ITS.ListL = task (t) {
    }with{
       loop on :draw {
          pico.output.draw.layer("list"++lisLay,[
-            '%',x=xpos,y=0,anchor=:NW
+            '%',x=xpos,y=ypos,w=final_width,h=final_height,anchor=:NW
          ])
       }
    }
@@ -245,7 +257,6 @@ set ITS.TableL = task (t) {
    pico.set.layer("table"++lay)
    set lay = lay + 1
 
-   -- Calcular larguras dos cabeçalhos
    var head_total_width = 0
    var heading_widths = []
    var spacing_width = 0.02
@@ -259,11 +270,11 @@ set ITS.TableL = task (t) {
    var start_x = 0.5 - (((spacing_width*(#t.head-1))+head_total_width)/2)
    val total_width = head_total_width + (spacing_width * (#t.head-1))
 
-   -- Desenhar a tabela no layer (uma vez só)
+   ;; Desenhar a tabela no layer (uma vez só)
    var current_x = start_x
    var row_y = 0.3
 
-   -- Desenhar cabeçalhos
+   ;; Desenhar cabeçalhos
    loop i, word in t.head{
       pico.output.draw.text(word,[
          '%',x = current_x, y= row_y,h=0.05,anchor=:W
@@ -271,11 +282,11 @@ set ITS.TableL = task (t) {
       set current_x = current_x + heading_widths@i + spacing_width
    }
 
-   -- Linha horizontal superior
+   ;; Linha horizontal superior
    set row_y = row_y + 0.05
    pico.output.draw.rect ['%',x=start_x,y=row_y,w=total_width,h=0.005,anchor=:NW]
 
-   -- Desenhar linhas da tabela
+   ;; Desenhar linhas da tabela
    set row_y = row_y + 0.05
    loop i in #t{
       var row = t@i
@@ -289,10 +300,10 @@ set ITS.TableL = task (t) {
       set row_y = row_y + 0.05
    }
 
-   -- Linha horizontal inferior
+   ;; Linha horizontal inferior
    pico.output.draw.rect ['%',x=start_x,y=row_y,w=total_width,h=0.005,anchor=:W]
 
-   -- Linhas verticais separadoras
+   ;; Linhas verticais separadoras
    var sep_x = start_x
    loop i in #t.head-1{
       set sep_x = sep_x + heading_widths@i + spacing_width
@@ -308,10 +319,9 @@ set ITS.TableL = task (t) {
    var width = t.width || 1.0
    var height = t.height || 1.0
 
-   -- Desenhar o layer da tabela no slide
    loop on :draw{
       pico.output.draw.layer("table"++tableLay, [
-          '%', x=xpos, y=ypos, w=width, h=height
+          '%', x=xpos, y=ypos, w=width, h=height, anchor = :S
       ])
    }
 }
@@ -347,12 +357,25 @@ set ITS.ImageL = task (t) {
       set final_width = cell_height * img_aspect
    }
 
-   var xpos = cell_x
-   var ypos = cell_y
+   var parent = [
+      '%', 
+      x = cell_x - (final_width / 2), 
+      y = cell_y - (final_height / 2),
+      w = final_width,
+      h = final_height
+   ]
+   
+   var child = [
+      '%', 
+      x = 0.5, 
+      y = 0.5
+   ]
+
+   var pos = pico.xin.pos(parent,child)
 
    loop on :draw{
       pico.output.draw.layer("image"++imaLay, [
-          '%',x=xpos,y=ypos,w=final_width,h=final_height
+          '%',x=pos.x,y=pos.y,w=final_width,h=final_height,anchor=:NW
       ])
    }
 }
