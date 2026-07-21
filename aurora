@@ -82,7 +82,7 @@ set ITS.ListL = task (t) {
       pico.set.pencil [font = "DejaVuSans.ttf"]
 ;;==============================================================
 
-      val skip = t.skip || 0.075
+      val skip = (t.skip || 0.075) * (t.size || 1)
       val margin_left = 0.05
       val margin_top = 0.05
 
@@ -96,25 +96,30 @@ set ITS.ListL = task (t) {
          set base_y = base_y + skip
       }
 
+      var base_text_height = 0.05
+      var base_line_space  = 0.075
+
+      var text_height = base_text_height * (t.size || 1)
+
       val start_index = (t.btitle && 1) || 0
       loop i in n {
          pico.output.draw.text(t@i,[
-            '%',x=0.1,y=0.15+((i+start_index)*skip),h=0.05,anchor=:W
+            '%',x=0.1,y=0.15+((i+start_index)*skip),h=text_height,anchor=:W
          ])
        }
        if (((t.bullet == nil) && true) || t.bullet){
           loop i in n{
-             pico.output.draw.oval ['%',x=0.05,y=0.15+((i+start_index)*skip),h=0.02,w=0.02,anchor=:W]
+             pico.output.draw.oval ['%',x=0.05,y=0.15+((i+start_index)*skip),h=(0.02 * (t.size || 1)),w=(0.02 * (t.size || 1)),anchor=:W]
           }
        }
        pico.set.layer("world")
     }
     updateLayer()
 
-    var cell_x = t.xpos || 0.5
-    var cell_y = t.ypos || 0.5
-    var cell_width = t.width || 0.5
-    var cell_height = t.height || 0.3
+    var cell_x = t.xpos 
+    var cell_y = t.ypos 
+    var cell_width = t.width 
+    var cell_height = t.height 
 
     var content_start_x = 0.5
     var content_start_y = 0.35
@@ -158,6 +163,7 @@ set ITS.ListL = task (t) {
 
    }with{
       loop on :draw {
+         await :Ok
          pico.output.draw.layer("list"++lisLay,[
             '%',x=pos.x,y=pos.y,anchor=:NW
          ])
@@ -179,9 +185,17 @@ set ITS.TextL = task (t) {
    loop line in t@1::gmatch("([^\r\n]+)"){
       table.insert(lines,line)
    }
+
+   var base_text_height = 0.05
+   var base_line_space  = 0.075
+
+   var text_height = base_text_height * (t.size || 1)
+   var line_space  = base_line_space  * (t.size || 1) 
+
+   pico.set.pencil [color = t.color || color.fg]
    loop i,v in lines {
       pico.output.draw.text(v,[
-          '%', x=0.05,y=0.15+(i*0.075),h=0.05, anchor=:W
+          '%', x=0.05,y=0.15+(i*line_space),h=text_height , anchor=:W
       ])
    }
 
@@ -210,8 +224,11 @@ set ITS.TextL = task (t) {
    ]
    
    var pos = pico.xin.pos(parent, child)
+   set pos.x = pos.x + (t.xshift || 0)
+   set pos.y = pos.y + (t.yshift || 0)
 
-   loop on :draw {
+   loop on :draw{
+      await :Ok
       pico.output.draw.layer("text"++texLay,[
           '%',x=pos.x,y=pos.y,anchor=:NW,
       ])
@@ -357,12 +374,12 @@ set ITS.ImageL = task (t) {
    var imaLay = lay
    set lay = lay + 1
 
-   val img = pico.get.image(t@1)
-
    pico.output.draw.image(t@1,[
       '%',x=0.5,y=0.5,w=1,h=1
    ])
    pico.set.layer("world")
+
+   val img = pico.get.image(t@1)
 
    var cell_x = t.xpos
    var cell_y = t.ypos
@@ -397,8 +414,14 @@ set ITS.ImageL = task (t) {
    ]
 
    var pos = pico.xin.pos(parent,child)
+   set final_width  = final_width  * (t.size || 1) 
+   set final_height = final_height * (t.size || 1)
+
+   set pos.x = pos.x + (t.xshift || 0)
+   set pos.y = pos.y + (t.yshift || 0)
 
    loop on :draw{
+      await :Ok
       pico.output.draw.layer("image"++imaLay, [
           '%',x=pos.x,y=pos.y,w=final_width,h=final_height,anchor=:NW
       ])
@@ -458,6 +481,8 @@ set TPL.Cover = task (t) {
     var line_height = font_size*1.2
 
     loop on :draw {
+	pico.set.pencil [color = t.bgcolor || color.bg]
+	pico.output.draw.rect ['%',x=0.5,y=0.5,w=1,h=1]
         pico.set.pencil [
             color = (t.color && t.color.fg) || color.fg
         ]
@@ -492,11 +517,10 @@ set TPL.Ref = task (t) {
    var current_ref = t@cur_idx
 
    task drawRef(ref){
-      pico.set.pencil [
-         color = color.fg
-      ]
       loop on :draw{
-
+         pico.set.pencil [
+            color = color.fg
+         ]
          pico.output.draw.text("REFERENCES", [
             '%',x=0.5,y=0.08,h=0.075
          ])
@@ -532,6 +556,11 @@ set TPL.Ref = task (t) {
             }
          }
       }with{
+         loop on :draw{
+	    pico.set.pencil [color = t.bgcolor || color.bg]
+	    pico.output.draw.rect ['%',x=0.5,y=0.5,w=1,h=1]
+         }
+      }with{
          spawn drawRef(t@cur_idx)
          await(false)
       }
@@ -539,6 +568,14 @@ set TPL.Ref = task (t) {
 }
 
 set TPL.Grid = task (t) {
+   
+   task draw_bg(c){
+      loop on :draw{
+         pico.set.pencil [color = c || color.bg]
+         pico.output.draw.rect ['%',x=0.5,y=0.5,w=1,h=1]
+      }
+   }
+  
    var total_rows = #t
    var total_cols = 0
    
@@ -555,39 +592,40 @@ set TPL.Grid = task (t) {
    var cell_width = 1.0 / total_cols
    var cell_height = (1.0 - title_height) / total_rows
 
+   spawn draw_bg(t.bgcolor)
 
-;;CALCULAR POSIÇÃO DOS GRIDS
-   loop row_idx in total_rows{
-      var row = t@row_idx
-      loop col_idx in #row{
-         var item = row@col_idx
-         if item {
-            var cell_x = ((col_idx - 1) * cell_width) + (cell_width/2)
-            var cell_y = title_height + ((row_idx - 1) * cell_height) + (cell_height/2)
+      loop row_idx in total_rows{
+         var row = t@row_idx
+         loop col_idx in #row{
+            var item = row@col_idx
+            if item {
+               var cell_x = ((col_idx - 1) * cell_width) + (cell_width/2)
+               var cell_y = title_height + ((row_idx - 1) * cell_height) + (cell_height/2)
 
-            var xpos = cell_x
-            var ypos = cell_y
-            var width = cell_width
-            var height = cell_height
+               set item.xpos = cell_x
+               set item.ypos  = cell_y
+               set item.width = cell_width
+               set item.height = cell_height
 
-            set item.xpos = xpos
-            set item.ypos  = ypos
-            set item.width = width
-            set item.height = height
+               set item.grid_row = row_idx
+               set item.grid_col = col_idx
+               set item.total_rows = total_rows
+               set item.total_cols = total_cols
+               set item.title_height = title_height
 
-            spawn @grid_objects ITS@(item.tag)(item)
+               spawn @grid_objects ITS@(item.tag)(item)
+            }
          }
       }
-   }
 
-   loop on :draw{
-      pico.set.pencil [
-         color = (t.color && t.color.fg) || color.fg
-      ]
-      pico.output.draw.text(t.title || "",[
-         '%',x=0.5,y=0.1,h=0.075
-      ])
-   } 
+
+      loop on :draw{
+         pico.set.pencil [color = (t.color && t.color.fg) || color.fg]
+         pico.output.draw.text(t.title || "",[
+            '%',x=0.5,y=0.1,h=0.075
+         ])
+         emit :Ok
+      }
 }
 
 var cur = 1

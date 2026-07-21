@@ -1,108 +1,354 @@
 return {
     --1===============
-    {
-        template = "FrontCover",
-        bgcolor = "yellow",
-        titlestr = "MARROCOS", 
-        subtitlestr = " ",
-        autorstr = "Thiago Presotto",
-        unistr = "Colegio ", 
-        datestr = "??/??/2015",
-    },
+	{
+        	template = 'Cover',
+        	bgcolor = "yellow",
+        	title= "MARROCOS", 
+        	autor= "Thiago Presotto",
+        	inst = "Colegio S.D. ", 
+	},
     --2===============
-    {
-        template = "Slide_Title_OneObject",
-        bgcolor = "red",
-        title = "LINHA DO TEMPO",
-        {
-            "Os berbéres chegaram a Marrocos há cerca de 3000 anos atrás",
-            "Em 685 dC. os exércitos árabes invadem o Norte de África introduzindo o Islão e o árabe",
-            "Em 711 os muçulmanos marroquinos invadem o território Ibérico",
-            "Em 788 berbéres e árabes unificam-se para um estado marroquino independente",
-            "Em meados do século 11, os Almorávidas conquistam Marrocos construindo assim um império muçulmano",
-            "Em 1912 Marrocos é inserido como protectorado francês e espanhol em algumas partes do território",
-            "Abd al-Krim começou a revolta contra a presença europeia em território marroquino nos anos 1921 até 1926",
-            "Em 1956 Marrocos ganha independência total do território excepto nas cidades autónomas de Ceuta e Melilla",
-            "Em 1957 Marrocos tornou-se numa monarquia constitucional",
-            "Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores",
-            tag = "BulletList",
-        }
-    },
+    	{
+        	template = 'Grid',
+        	bgcolor = "yellow",
+        	title = "LINHA DO TEMPO",
+		{
+        		{
+				tag = 'ListL',
+				size = 0.8,
+            				"Os berberes chegaram a Marrocos ha cerca de 3000 anos atras",
+            				"Em 685 dC. os exercitos arabes invadem o Norte de Africa introduzindo o Islao e o arabe",
+            				"Em 711 os muculmanos marroquinos invadem o territorio Iberico",
+            				"Em 788 berberes e arabes unificam-se para um estado marroquino independente",
+            				"Em meados do seculo 11, os Almoravidas conquistam Marrocos construindo assim um imperio muçulmano",
+            				"Em 1912 Marrocos e inserido como protectorado frances e espanhol em algumas partes do territorio",
+            				"Abd al-Krim começou a revolta contra a presença europeia em territorio marroquino nos anos 1921 até 1926",
+            				"Em 1956 Marrocos ganha independencia total do territorio excepto nas cidades autonomas de Ceuta e Melilla",
+            				"Em 1957 Marrocos tornou-se numa monarquia constitucional",
+            				"Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores",
+        		}
+		}
+    	},
     --3===============
-    {
-        template = "Slide_Title_OneObject",
-        bgcolor = "red",
-        title = "GEOGRAFIA DO MARROCOS",
-        {
-            [[Marrocos se encontra na África setentrional e é
-banhado pelo oceano atlântico e mar mediterrâneo,
-Marrocos possui 446 550 de área. Como Hassan II
-disse “Marrocos é como uma árvore com raízes da
-África, mas cujas folhas respiram o ar Europeu’’. Por
-esse motivo existe uma variedade linguística entre
-árabe, berbere(povo nômade), francês e grande parte
-fala espanhol com facilidade e faz fronteira com três
-países(Argélia, Mauritânia e Espanha).
+    	{
+        	template = 'Grid',
+        	bgcolor = "red",
+        	title = "GEOGRAFIA DO MARROCOS",
+        	{
+			{
+				tag = 'TextL',
+                                yshift = -0.05,
+            [[Marrocos se encontra na Africa setentrional e e
+banhado pelo oceano atlantico e mar mediterraneo,
+Marrocos possui 446 550 de area. Como Hassan II
+disse Marrocos e como uma arvore com raizes da
+Africa, mas cujas folhas respiram o ar Europeu. Por
+esse motivo existe uma variedade linguistica entre
+arabe, berbere(povo nomade), frances e grande parte
+fala espanhol com facilidade e faz fronteira com tres
+paises(Argelia, Mauritania e Espanha).
     ]],
-        tag = "Text",
-        }
-    },
+			},
+        	},
+		{
+			{
+				tag = 'TextL',
+				" "
+			},
+		},
+		{
+			{
+				tag = 'TextL',
+				" "
+			},
+			{
+				tag = 'TextL',
+				" "
+			},
+			{
+				tag = 'ImageL',
+				"MARROCOS/map2.png"
+			},
+		},
+    	},
     --4===============
-    {
-        template = "Slide_Title_OneObject",
-        bgcolor = "red",
-        title = "RELIGIÃO",
-        {
-            [[Em Marrocos estima-se que 98% são
-islãs(muçulmano) e o resto são católicos e
-judeus, segundo o alcorão, livro da religião
-muçulmana, o único deus é Allah e seu profeta
-é Maomé. Diferente de outros países, o governo 
-não proibiu outras religiões e não permite
-propagandas que convertam alguém à outra
-religião, porém o governo considera as
-mesquitas lugares sagrados em que apenas
-islamitas podem entrar.
+    	{
+        	template = 'Grid',
+        	bgcolor = "red",
+        	title = "RELIGIAO",
+        	{
+			{
+				tag = 'TextL',
+				size = 0.9,
+				yshift = -0.02,
+            			[[Em Marrocos estima-se que 98% sao islas(muculmano)
+e o resto sao catolicos e judeus, seguindo o alcorao, livro
+da religiao muculmana, o unico deus e Allah e seu profeta e
+Maome. Diferente de outros paises, o governo nao proibiu outras
+religioes e nao permite propagandas que convertam alguem
+a outra religiao, porem o governo considera as mesquitas
+lugares sagrados em que apenas islamitas podem entrar.
 ]],
-            tag = "Text",
-        }
-    },
+			},
+        	},
+		{
+			{
+				tag = 'TextL',
+				" "
+			},
+		},
+		{
+			{
+				tag = 'ImageL',
+                                size = 0.7,
+				"MARROCOS/religiao1.jpg"
+			},
+			{
+                                tag = 'ImageL',
+                                size = 0.7,
+                                "MARROCOS/religiao2.jpg"
+			},
+			{
+                                tag = 'ImageL',
+                                size = 0.7,
+                                "MARROCOS/religiao3.jpg"
+			},
+		},
+    	},
     --5===============
-    {},
+    	{
+		template = 'Grid',
+		bgcolor = "black",
+		{
+			{
+				tag = "TextL",
+				color = "white",
+				size = 0.75,
+				yshift = -0.14,
+				[[Na bandeira de Marrocos o vermelho
+simboliza a descendencia da familia real do
+profeta de Maome e o pentagrama verde
+simboliza o selo de salomao e um simbolo
+ancestral de vida, saude, sabedoria e paz
+.O verde representa a cor do islamismo.
+]],
+			},
+			{
+				tag = "TextL",
+				color ="white",
+				size = 0.75,
+				xshift = 0.2,
+				yshift = -0.14,
+				[[Marrocos e habitada
+principalmente por arabes,
+juntamente com o berberes e de
+outras minorias. A sua musica e
+predominantemente arabe,
+mas Andaluz importadas e outras
+influencias tiveram um efeito
+importante sobre o carater musical
+do pais. Rock-influenciada
+bandas chaabi sao generalizadas,
+como e musica trance com origens
+historicas na musica muculmana.
+]]
+			},
+		},
+		{
+			{
+				tag = "ImageL",
+				xshift = 0.1,
+				color = "white",
+				"MARROCOS/marrocos_flag.jpg"
+			},
+		},
+		{
+			{
+				tag = "TextL",
+				color = "white",
+				size = 0.75,
+				[[Ja os principais esportes em Marrocos e o
+futebol, tenis, kickboxing e golfe
+]]	
+			},
+		},
+		{
+			{
+				tag = "ImageL",
+				size = 0.7,
+				"MARROCOS/nsei.jpg",
+			},
+			{
+				tag = "ImageL",
+				size = 0.7,
+				"MARROCOS/tenis.jpg"
+			},
+			{
+				tag = "ImageL",
+				yshift = -0.05,
+				xshift = -0.05,
+				"MARROCOS/instrumentos.jpg"
+			},
+		},
+	},
     --6===============
-    {
-        template = "Slide_Title_OneObject",
-        bgcolor = "red",
-        title = "CULTURA MARROQUINA",
-        {
-            [[Marrocos possui diversas características em sua 
-cultura. Temos a dança do ventre eu é a típica em 
-Marrocos, a djellaba, roupa de lá, a pulseira 
-marroquina que é junta ao anel, eles tem o costume de 
-decorar as salas com cortinas no teto, parede(tudo). 
-Em Marrocos é comum ver mulheres trabalhando em 
-centros urbanos, a verdade é que a cultura africana e 
-muçulmana é vincada só que com grande interferência 
-europeia.
-]],
-            tag = "Text"
-        }
-    },
+    	{
+        	template = 'Grid',
+        	bgcolor = "red",
+        	title = "CULTURA MARROQUINA",
+        	{
+			{
+				tag = 'TextL',
+				size = 0.95,
+				yshift = -0.05,
+            			[[Marrocos possui diversas caracteristicas em sua 
+cultura. Temos a danca do ventre eu e a tipica em 
+Marrocos, a djellaba, roupa de la, a pulseira marroquina 
+que e junta ao anel, eles tem o costume de decorar as 
+salas com cortinas no teto, parede(tudo). Em Marrocos e 
+comum ver mulheres trabalhando em centros urbanos, a 
+verdade e que a cultura africana e muculmana e vincada 
+so que com grande interferencia europeia.
+]],	
+			},
+        	},
+		{
+			{
+				tag = 'TextL',
+				""
+			},
+		},
+		{
+			{
+				tag = 'ImageL',
+				size = 0.8,
+				"MARROCOS/cultura1.jpg"
+			},
+                        {
+                                tag = 'ImageL',
+				size = 0.8,
+                                "MARROCOS/cultura2.jpg"
+                        },
+                        {
+                                tag = 'ImageL',
+				size = 0.9,
+                                "MARROCOS/cultura3.jpg"
+                        },
+                        {
+                                tag = 'ImageL',
+				size = 0.9,
+                                "MARROCOS/cultura4.jpg"
+                        },
+		},
+    	},
     --7===============
-    {
-        template = "Slide_Title_OneObject",
-        bgcolor = "red",
-        title = "CULINARIA MARROQUINA",
-        {
-            [[Os marroquinos se limitam em comidas 
-com tomate, carne, pimenta, etc. Como 
-eles não podem comer carne de porco, já 
-que o alcorão proíbe, a carne que 
-consumida é a de carneiro. Outro 
-hábito comum em Marrocos é comer com as 
-mãos.
+    	{
+        	template = 'Grid',
+        	bgcolor = "red",
+        	title = "CULINARIA MARROQUINA",
+                {
+                        {
+                                tag = 'TextL',
+				size = 0.98,
+                                [[Os marroquinos se limitam em comidas com tomate, carne,
+pimenta, etc. Como eles nao podem comer carne de porco, 
+ja que o alcorao proibe, a carne que consumida e a de 
+carneiro. Outro habito comum em Marrocos e comer com 
+as maos.
 ]],
-            tag = "Text"
-        }
+                        },
+                },
+                {
+                        {
+                                tag = 'TextL',
+                                ""
+                        },
+                },
+                {
+                        {
+                                tag = 'ImageL',
+				size = 0.95,
+				xshift = 0.01,
+                                "MARROCOS/comida1.jpg"
+                        },
+                        {
+                                tag = 'ImageL',
+				xshift = 0.01,
+				size = 0.9,
+                                "MARROCOS/comida2.jpg"
+                        },
+                        {
+                                tag = 'ImageL',
+                                size = 0.9,
+                                "MARROCOS/comida3.jpg"
+                        },
+                        {
+                                tag = 'ImageL',
+				yshift = -0.01,
+				xshift = -0.01,
+                                "MARROCOS/comida4.jpg"
+                        },
+                },
     },
+    --8===============
+	{
+		template = 'Ref',
+		bgcolor = "red",
+		{	
+			type = 'url',
+			title = "www.marrocos.com/história/cultura-marroquina",
+			author ={
+
+			}
+		},
+                {
+                        type = 'url',
+                        title = "www.minube.com.br/as-minhas-viagens/25-principais-pontos-turı́sticos-em-marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "www.marrocos.com/destinos/deserto-saara-marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "pt.wikipédia.org/wiki/marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "http://www.marrocos.com/historia/religiao-marrocos/",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "Costumes do marrocos.blogspot.com.br",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "http://www.coladaweb.com/geografia/paises/marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "Marrocos.worldpress.com",
+                        author ={
+
+                        }
+                },
+	},
 }
