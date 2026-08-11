@@ -163,7 +163,6 @@ set ITS.ListL = task (t) {
 
    }with{
       loop on :draw {
-         await :Ok
          pico.output.draw.layer("list"++lisLay,[
             '%',x=pos.x,y=pos.y,anchor=:NW
          ])
@@ -228,7 +227,6 @@ set ITS.TextL = task (t) {
    set pos.y = pos.y + (t.yshift || 0)
 
    loop on :draw{
-      await :Ok
       pico.output.draw.layer("text"++texLay,[
           '%',x=pos.x,y=pos.y,anchor=:NW,
       ])
@@ -251,6 +249,7 @@ set ITS.Table = task (t) {
    val total_width = head_total_width + (spacing_width * (#t.head-1))
 
    loop on :draw {
+      pico.set.pencil [color = "black"]
  
       var current_x = start_x      
 
@@ -421,12 +420,13 @@ set ITS.ImageL = task (t) {
    set pos.y = pos.y + (t.yshift || 0)
 
    loop on :draw{
-      await :Ok
       pico.output.draw.layer("image"++imaLay, [
           '%',x=pos.x,y=pos.y,w=final_width,h=final_height,anchor=:NW
       ])
    }
 }
+
+
 
 val TPL = []
 set TPL.Cover = task (t) {
@@ -480,11 +480,21 @@ set TPL.Cover = task (t) {
     var start_y=0.2
     var line_height = font_size*1.2
 
+    set t.date = do{
+       var d
+       if t.date == "today" {
+          set d = os.date("%B %d, %Y")
+       } else {
+          set d = t.date || ""
+       }
+       d
+    }
+
     loop on :draw {
 	pico.set.pencil [color = t.bgcolor || color.bg]
 	pico.output.draw.rect ['%',x=0.5,y=0.5,w=1,h=1]
         pico.set.pencil [
-            color = (t.color && t.color.fg) || color.fg
+            color = t.fgcolor || color.fg 
         ]
 
         loop i, line in title_lines{
@@ -503,15 +513,21 @@ set TPL.Cover = task (t) {
         pico.output.draw.text(t.inst || "", [
             '%', x=0.5, y=0.75, h=0.05
         ])
-        pico.output.draw.text(t.date || "", [
+        pico.output.draw.text(t.date, [
             '%', x=0.5, y=0.8,  h=0.05
         ])
     }
 }
 ;;-> TODO: MELHORAR FUNÇÃO DE REFERENCIA 
 
-set TPL.Ref = task (t) {
+set TPL.Reference = task (t) {
   
+   var clr = t.bgcolor || color.bg
+
+   if T.Ref{
+      set t = T.Ref
+   }
+
    var cur_idx = 1
    var tot_ref = #t
    var current_ref = t@cur_idx
@@ -526,7 +542,7 @@ set TPL.Ref = task (t) {
          ])
 
          pico.output.draw.text(ref.title,[
-            '%', x=0.5, y=0.3,h=0.05
+            '%', x=0.5, y=0.3,h=0.04
          ])
 
          var author_text = table.concat(ref.author, "; ")
@@ -540,30 +556,138 @@ set TPL.Ref = task (t) {
       }
    }
 
-   loop{
-      par :any{
-         val e = await :key.dn
-         match e.key {
-            :Down=>{
-               if (cur_idx <= 1) => break() ;;possibilidade de continue?
-               set cur_idx = cur_idx - 1
-               set current_ref = t@cur_idx
+   func wrap(text,max_width,font_size){
+      var lines = []
+      var words = []
+      loop word in string.gmatch(text,"%S+"){
+         table.insert(words,word)
+      }
+      var current_line = ""
+      loop i,word in words{
+         var test_line = current_line
+         if (test_line != ""){
+            set test_line = test_line++" "++word 
+         }
+         else{
+            set test_line = word
+         }
+         var dim = ['%',h=font_size]
+         pico.get.text(dim,test_line)
+
+         if dim.w <= max_width{
+            set current_line = test_line
+         }
+         else{
+            table.insert(lines,current_line)
+            set current_line = word
+         }
+
+      }
+      if current_line != "" => table.insert(lines,current_line)
+      return(lines) 
+   }
+
+   func drawPresentationMode(){
+      var reflay
+ 
+      func updateIdx(){
+         pico.layer.empty(nil,"drawRef"++lay,false,['!',w=800,h=600])
+         pico.set.layer("drawRef"++lay)
+         set refLay = lay
+         set lay = lay+1
+         pico.set.pencil [font = "DejaVuSans.ttf"]
+         pico.set.pencil [color = "black"]
+
+         pico.output.draw.rect([
+            '%',x=0.5,y=0.5,w=1,h=1
+         ])
+         pico.set.pencil [color = "white"]
+
+         var start_idx = cur_idx
+         var end_idx = math.min(cur_idx + 7, tot_ref)
+         var y_pos = 0.1
+         var font_size = 0.035
+         var max_width = 0.9
+         var line_height = 0.06
+         var actual_line_height = font_size * 1.5
+
+         loop i in (start_idx, end_idx){
+            var ref = t@i
+            var wrapped_lines = wrap(ref.title,max_width,font_size)
+            loop _, line in wrapped_lines{
+               pico.output.draw.text(line,[
+                  '%', x=0.05,y=y_pos,h=0.035,anchor = :W
+               ])
+               set y_pos = y_pos + actual_line_height
             }
-            :Up=>{
-               if (cur_idx >= #t) => break()
-               set cur_idx = cur_idx + 1
-               set current_ref = t@cur_idx
+            set y_pos = y_pos + (actual_line_height * 0.5)
+         }
+         pico.set.layer("world")
+      }      
+
+      par :any{
+         loop{
+            val e = await :key.dn
+            match e.key{
+               :P=>break()
+               :Down=>{
+                  if (cur_idx > 1) { ;;possibilidade de continue?
+                     set cur_idx = cur_idx - 1
+                     set current_ref = t@cur_idx
+                     updateIdx()
+                  }
+               }
+               :Up=>{
+                  if (cur_idx < #t){
+                     set cur_idx = cur_idx + 1
+                     set current_ref = t@cur_idx
+ 	 	     updateIdx()
+                  }
+               }
+
             }
          }
       }with{
+         updateIdx()
          loop on :draw{
-	    pico.set.pencil [color = t.bgcolor || color.bg]
+            pico.output.draw.layer("drawRef"++refLay,[
+               '%', x=0.5,y=0.5
+            ]) 
+         }
+      }
+   }
+
+   loop{
+      par :any{
+         loop on :draw{
+	    pico.set.pencil [color = clr]
 	    pico.output.draw.rect ['%',x=0.5,y=0.5,w=1,h=1]
          }
       }with{
-         spawn drawRef(t@cur_idx)
+         pin ref = spawn drawRef(t@cur_idx)
          await(false)
-      }
+      }with{
+         val e = await :key.dn
+         match e.key {
+            :Down=>{
+               if (cur_idx > 1) { ;;possibilidade de continue?
+                  set cur_idx = cur_idx - 1
+                  set current_ref = t@cur_idx
+	       }
+            }
+            :Up=>{
+               if (cur_idx < #t){ 
+                  set cur_idx = cur_idx + 1
+                  set current_ref = t@cur_idx
+               }
+            }
+            :P=>{
+               ;;toggle ref(false)
+               print("P")
+               drawPresentationMode()
+            }
+         }
+      }      
    }
 }
 
@@ -579,7 +703,6 @@ set TPL.Grid = task (t) {
    var total_rows = #t
    var total_cols = 0
    
-   pin grid_objects = tasks()
 
    loop i in total_rows{
       var row = t@i
@@ -594,16 +717,14 @@ set TPL.Grid = task (t) {
 
    spawn draw_bg(t.bgcolor)
 
+   pin grid_objects = tasks()
       loop row_idx in total_rows{
          var row = t@row_idx
          loop col_idx in #row{
             var item = row@col_idx
-            if item {
-               var cell_x = ((col_idx - 1) * cell_width) + (cell_width/2)
-               var cell_y = title_height + ((row_idx - 1) * cell_height) + (cell_height/2)
-
-               set item.xpos = cell_x
-               set item.ypos  = cell_y
+            if item.tag {
+               set item.xpos = ((col_idx - 1) * cell_width) + (cell_width/2)
+               set item.ypos  = title_height + ((row_idx - 1) * cell_height) + (cell_height/2)
                set item.width = cell_width
                set item.height = cell_height
 
@@ -624,18 +745,69 @@ set TPL.Grid = task (t) {
          pico.output.draw.text(t.title || "",[
             '%',x=0.5,y=0.1,h=0.075
          ])
-         emit :Ok
       }
 }
 
 var cur = 1
+set TPL.Contents = task (t) {
+
+   print(t)
+   if (!t) {
+      set t = T.Contents
+   }
+
+   val lines = []
+   loop _, line in t{
+      table.insert(lines,line@1)
+   }
+
+   var base_text_height = 0.1
+   var base_line_space  = 0.15
+
+   var text_height = base_text_height * (t.size || 1)
+   var line_space  = base_line_space  * (t.size || 1)
+
+   loop on :draw{
+      var current
+      pico.set.pencil [color = "blue"]
+      pico.output.draw.text ("TABLE OF CONTENTS",[
+         '%',x=0.5,y=0.04,h=0.14,anchor=:N
+      ])
+
+      loop i, section in t {
+         pico.set.pencil [color = "black"]
+         pico.output.draw.text(i++".", [
+            '%', x=0.05,y=0.15+(i*line_space),h=text_height,anchor=:W
+         ])
+         pico.output.draw.text(section@1,[
+            '%', x=0.15,y=0.15+(i*line_space),h=text_height , anchor=:W
+         ])
+         if (cur >= section@2) {
+            set current = section@1
+         }
+      } 
+      
+      pico.set.pencil [color = "black"]
+      pico.output.draw.rect ['%',x=0.5,y=0.8,w=1,h=0.2,anchor=:N]
+      pico.set.pencil [color = "white"]
+      pico.output.draw.text("Current Section: ",[
+         '%',x=0.02,y=0.9,h=0.06,anchor=:W      
+      ])
+
+         
+      pico.output.draw.text(current,[
+         '%',x=0.35,y=0.9,h=0.07,anchor=:W
+      ])
+   }
+}
+
 loop {
     print(:cur, cur)
     val t = T@cur
     pico.set.effect [
         color = (t.color && t.color.bg) || color.bg
     ]
-    spawn TPL@(t.template)(t)
+    pin slide = spawn TPL@(t.template)(t)
     loop {
         val e = await :key.dn
         match e.key {
@@ -654,6 +826,18 @@ loop {
             :Escape => {
                 return()
             }
+	    :T => {
+ 	       if T.Contents{ 
+                  toggle slide(false)
+                  spawn TPL@("Contents")(T.Contents) 
+                  await 3s
+                  toggle slide(true) 
+	       }
+            }
+	    :S => {
+	       toggle slide(false)
+               ;;spawn TPL@()
+	    }
         }
         
     }

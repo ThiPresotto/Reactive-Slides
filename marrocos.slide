@@ -1,16 +1,74 @@
 return {
+	Ref = {
+		{	
+			type = 'url',
+			title = "www.marrocos.com/história/cultura-marroquina",
+			author ={
+
+			}
+		},
+                {
+                        type = 'url',
+                        title = "www.minube.com.br/as-minhas-viagens/25-principais-pontos-turı́sticos-em-marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "www.marrocos.com/destinos/deserto-saara-marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "pt.wikipédia.org/wiki/marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "http://www.marrocos.com/historia/religiao-marrocos/",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "Costumes do marrocos.blogspot.com.br",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "http://www.coladaweb.com/geografia/paises/marrocos",
+                        author ={
+
+                        }
+                },
+                {
+                        type = 'url',
+                        title = "Marrocos.worldpress.com",
+                        author ={
+
+                        }
+                }
+	},
     --1===============
 	{
         	template = 'Cover',
         	bgcolor = "yellow",
-        	title= "MARROCOS", 
-        	autor= "Thiago Presotto",
+        	title= "MARROCOS EXEMPLO DE TITULO MUITO GRANDE PARA CABER", 
+        	author= "Thiago Presotto",
         	inst = "Colegio S.D. ", 
 	},
     --2===============
     	{
         	template = 'Grid',
-        	bgcolor = "yellow",
+        	bgcolor = "red",
         	title = "LINHA DO TEMPO",
 		{
         		{
@@ -20,12 +78,12 @@ return {
             				"Em 685 dC. os exercitos arabes invadem o Norte de Africa introduzindo o Islao e o arabe",
             				"Em 711 os muculmanos marroquinos invadem o territorio Iberico",
             				"Em 788 berberes e arabes unificam-se para um estado marroquino independente",
-            				"Em meados do seculo 11, os Almoravidas conquistam Marrocos construindo assim um imperio muçulmano",
+            				"Em meados do seculo 11, os Almoravidas conquistam Marrocos construindo assim um imperio muculmano",
             				"Em 1912 Marrocos e inserido como protectorado frances e espanhol em algumas partes do territorio",
-            				"Abd al-Krim começou a revolta contra a presença europeia em territorio marroquino nos anos 1921 até 1926",
+            				"Abd al-Krim começou a revolta contra a presenca europeia em territorio marroquino nos anos 1921 até 1926",
             				"Em 1956 Marrocos ganha independencia total do territorio excepto nas cidades autonomas de Ceuta e Melilla",
             				"Em 1957 Marrocos tornou-se numa monarquia constitucional",
-            				"Em 1979 Marrocos assume o controle do Saara Ocidental refazendo então assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores",
+            				"Em 1979 Marrocos assume o controle do Saara Ocidental refazendo entao assim o antigo mapa do reino de Marrocos já criado por dinastias anteriores",
         		}
 		}
     	},
@@ -51,19 +109,11 @@ paises(Argelia, Mauritania e Espanha).
 			},
         	},
 		{
-			{
-				tag = 'TextL',
-				" "
-			},
 		},
 		{
 			{
-				tag = 'TextL',
-				" "
 			},
 			{
-				tag = 'TextL',
-				" "
 			},
 			{
 				tag = 'ImageL',
@@ -93,8 +143,6 @@ lugares sagrados em que apenas islamitas podem entrar.
         	},
 		{
 			{
-				tag = 'TextL',
-				" "
 			},
 		},
 		{
@@ -213,11 +261,8 @@ so que com grande interferencia europeia.
 			},
         	},
 		{
-			{
-				tag = 'TextL',
-				""
-			},
 		},
+
 		{
 			{
 				tag = 'ImageL',
@@ -260,8 +305,6 @@ as maos.
                 },
                 {
                         {
-                                tag = 'TextL',
-                                ""
                         },
                 },
                 {
@@ -292,63 +335,7 @@ as maos.
     },
     --8===============
 	{
-		template = 'Ref',
+		template = 'Reference',
 		bgcolor = "red",
-		{	
-			type = 'url',
-			title = "www.marrocos.com/história/cultura-marroquina",
-			author ={
-
-			}
-		},
-                {
-                        type = 'url',
-                        title = "www.minube.com.br/as-minhas-viagens/25-principais-pontos-turı́sticos-em-marrocos",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "www.marrocos.com/destinos/deserto-saara-marrocos",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "pt.wikipédia.org/wiki/marrocos",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "http://www.marrocos.com/historia/religiao-marrocos/",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "Costumes do marrocos.blogspot.com.br",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "http://www.coladaweb.com/geografia/paises/marrocos",
-                        author ={
-
-                        }
-                },
-                {
-                        type = 'url',
-                        title = "Marrocos.worldpress.com",
-                        author ={
-
-                        }
-                },
 	},
 }

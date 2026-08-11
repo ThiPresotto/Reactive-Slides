@@ -15,31 +15,76 @@
 
 
 return {
+	Contents = {
+		{"Section One",1}, --1 2 3
+		{"Section Two",4}, --4 5 6
+		{"References",7},  -- 7 8
+        },
+	Ref = {
+		{
+			type = 'Article',
+			title = "pcr: An R package for quality assessment, analysis and testing of qPCR data.",
+			author = {
+				"Ahmed, M",
+				"Kim, D",
+			},
+                },
+		{
+			type = 'Article',
+			title = "Apenas um teste",
+			author = {
+				"Presotto, T",
+			},
+		}
+	},
+	{
+		template = 'Grid',
+		title = "example",
+		{
+			{
+			        tag = 'TextL',
+                                [[Texto posicionado na linha
+2 e coluna 1]]
+			},
+			{
+				tag = 'ImageL',
+				"C_logo.png"	
+			},
+		},
+		{
+			{
+                                tag = 'ListL',
+                                anim = true,
+                                btitle = "Bullet with title",
+                                "Point 1",
+                                "Point 2",
+			},
+			{
+				tag = "Table",
+				head = {
+                                        "Heading1",
+                                        "Heading2",
+                                        "Heading3",
+                                },
+                                {
+                                        "Row1",
+                                        "0.1",
+                                        ".01"
+                                },
+
+			},
+		},
+	},
 	{
 		template = 'Cover',
 		title    = "Title for a minimal beamer presentation",
 		subtitle = "",
 		author   = "Author One",
 		inst     = "Name of institution",
-		date     = "May 25, 2018",
+		date     = "today",
 		color = {
 			fg = "black"
 		},
-	},
-	{
-		template = 'Grid',
-		title    = "Outline",
-		{
-			{
-				tag  = 'ListL',
-				anim = false,
-				bullet = false,
-				skip = 0.15,
-				"Section One",
-				"Section Two",
-				"References",
-			}
-		}
 	},
         {
                 template = 'Grid',
@@ -134,22 +179,7 @@ Second line of second column
 		}
 	},
 	{
-		template = 'Ref',
-		{
-			type = 'Article',
-			title = "pcr: An R package for quality assessment, analysis and testing of qPCR data.",
-			author = {
-				"Ahmed, M",
-				"Kim, D",
-			},
-                },
-		{
-			type = 'Article',
-			title = "Apenas um teste",
-			author = {
-				"Presotto, T",
-			},
-		}
+		template = 'Reference',
 	}
 }
 
